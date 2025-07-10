@@ -1,0 +1,14 @@
+D:\CAPSTONE-SUPPORT\HRM-AI\HRM-AI.Repositories\obj\Debug\net9.0\HRM-AI.Repositories.csproj.AssemblyReference.cache
+D:\CAPSTONE-SUPPORT\HRM-AI\HRM-AI.Repositories\obj\Debug\net9.0\HRM-AI.Repositories.GeneratedMSBuildEditorConfig.editorconfig
+D:\CAPSTONE-SUPPORT\HRM-AI\HRM-AI.Repositories\obj\Debug\net9.0\HRM-AI.Repositories.AssemblyInfoInputs.cache
+D:\CAPSTONE-SUPPORT\HRM-AI\HRM-AI.Repositories\obj\Debug\net9.0\HRM-AI.Repositories.AssemblyInfo.cs
+D:\CAPSTONE-SUPPORT\HRM-AI\HRM-AI.Repositories\obj\Debug\net9.0\HRM-AI.Repositories.csproj.CoreCompileInputs.cache
+D:\CAPSTONE-SUPPORT\HRM-AI\HRM-AI.Repositories\bin\Debug\net9.0\HRM-AI.Repositories.deps.json
+D:\CAPSTONE-SUPPORT\HRM-AI\HRM-AI.Repositories\bin\Debug\net9.0\HRM-AI.Repositories.runtimeconfig.json
+D:\CAPSTONE-SUPPORT\HRM-AI\HRM-AI.Repositories\bin\Debug\net9.0\HRM-AI.Repositories.dll
+D:\CAPSTONE-SUPPORT\HRM-AI\HRM-AI.Repositories\bin\Debug\net9.0\HRM-AI.Repositories.pdb
+D:\CAPSTONE-SUPPORT\HRM-AI\HRM-AI.Repositories\obj\Debug\net9.0\HRM-AI.Repositories.dll
+D:\CAPSTONE-SUPPORT\HRM-AI\HRM-AI.Repositories\obj\Debug\net9.0\refint\HRM-AI.Repositories.dll
+D:\CAPSTONE-SUPPORT\HRM-AI\HRM-AI.Repositories\obj\Debug\net9.0\HRM-AI.Repositories.pdb
+D:\CAPSTONE-SUPPORT\HRM-AI\HRM-AI.Repositories\obj\Debug\net9.0\HRM-AI.Repositories.genruntimeconfig.cache
+D:\CAPSTONE-SUPPORT\HRM-AI\HRM-AI.Repositories\obj\Debug\net9.0\ref\HRM-AI.Repositories.dll

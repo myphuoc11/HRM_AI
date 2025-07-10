@@ -1,0 +1,12 @@
+{
+  "Version": 1,
+  "Hash": "H/hodhclPH7MHJvpkDtZbSBQGftDcQ7RDzit24rSdBo=",
+  "Source": "HRM-AI.API",
+  "BasePath": "_content/HRM-AI.API",
+  "Mode": "Default",
+  "ManifestType": "Build",
+  "ReferencedProjectsConfiguration": [],
+  "DiscoveryPatterns": [],
+  "Assets": [],
+  "Endpoints": []
+}

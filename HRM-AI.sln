@@ -1,0 +1,34 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.12.35527.113
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HRM-AI.API", "HRM-AI.API\HRM-AI.API.csproj", "{A3F2BB7F-3309-4CCE-8A13-DA4FC51666C3}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HRM-AI.Repositories", "HRM-AI.Repositories\HRM-AI.Repositories.csproj", "{4E6B6480-0E15-4D71-B230-728976C0D2AA}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HRM-AI.Services", "HRM-AI.Services\HRM-AI.Services.csproj", "{17124D34-5102-4738-B0ED-0ECF9A1AF6F2}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{A3F2BB7F-3309-4CCE-8A13-DA4FC51666C3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A3F2BB7F-3309-4CCE-8A13-DA4FC51666C3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A3F2BB7F-3309-4CCE-8A13-DA4FC51666C3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A3F2BB7F-3309-4CCE-8A13-DA4FC51666C3}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4E6B6480-0E15-4D71-B230-728976C0D2AA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4E6B6480-0E15-4D71-B230-728976C0D2AA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4E6B6480-0E15-4D71-B230-728976C0D2AA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4E6B6480-0E15-4D71-B230-728976C0D2AA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{17124D34-5102-4738-B0ED-0ECF9A1AF6F2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{17124D34-5102-4738-B0ED-0ECF9A1AF6F2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{17124D34-5102-4738-B0ED-0ECF9A1AF6F2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{17124D34-5102-4738-B0ED-0ECF9A1AF6F2}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal

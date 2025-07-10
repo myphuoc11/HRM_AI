@@ -1,0 +1,34 @@
+[
+  {
+    "ContainingType": "HRM_AI.API.Controllers.AuthenticationController",
+    "Method": "SignIn",
+    "RelativePath": "api/v1/authentication/sign-in",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "accountSignInModel",
+        "Type": "HRM_AI.Services.Models.AccountModels.AccountSignInModel",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "HRM_AI.API.Controllers.AuthenticationController",
+    "Method": "SignUp",
+    "RelativePath": "api/v1/authentication/sign-up",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "accountSignUpModel",
+        "Type": "HRM_AI.Services.Models.AccountModels.AccountSignUpModel",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  }
+]
