@@ -1,6 +1,91 @@
 [
   {
     "ContainingType": "HRM_AI.API.Controllers.AuthenticationController",
+    "Method": "ResendVerificationEmail",
+    "RelativePath": "api/v1/authentication/email/resend-verification",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "accountEmailModel",
+        "Type": "HRM_AI.Services.Models.AccountModels.AccountEmailModel",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "HRM_AI.API.Controllers.AuthenticationController",
+    "Method": "VerifyEmail",
+    "RelativePath": "api/v1/authentication/email/verify",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "email",
+        "Type": "System.String",
+        "IsRequired": false
+      },
+      {
+        "Name": "verificationCode",
+        "Type": "System.String",
+        "IsRequired": false
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "HRM_AI.API.Controllers.AuthenticationController",
+    "Method": "ChangePassword",
+    "RelativePath": "api/v1/authentication/password/change",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "accountChangePasswordModel",
+        "Type": "HRM_AI.Services.Models.AccountModels.AccountChangePasswordModel",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "HRM_AI.API.Controllers.AuthenticationController",
+    "Method": "ForgotPassword",
+    "RelativePath": "api/v1/authentication/password/forgot",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "accountEmailModel",
+        "Type": "HRM_AI.Services.Models.AccountModels.AccountEmailModel",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "HRM_AI.API.Controllers.AuthenticationController",
+    "Method": "ResetPassword",
+    "RelativePath": "api/v1/authentication/password/reset",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "accountResetPasswordModel",
+        "Type": "HRM_AI.Services.Models.AccountModels.AccountResetPasswordModel",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "HRM_AI.API.Controllers.AuthenticationController",
     "Method": "SignIn",
     "RelativePath": "api/v1/authentication/sign-in",
     "HttpMethod": "POST",

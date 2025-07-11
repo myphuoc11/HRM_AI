@@ -1,6 +1,7 @@
 ﻿using System.Text.Json.Serialization;
 using HRM_AI.API;
 using HRM_AI.API.Middlewares;
+using HRM_AI.Repositories.Common;
 using Microsoft.OpenApi.Models;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -59,14 +60,19 @@ app.UseMiddleware<PerformanceMiddleware>();
 
 // Allow CORS
 app.UseCors("cors");
-
-// Configure the HTTP request pipeline.
-if (app.Environment.IsDevelopment())
+// Initial seeding
+using (var scope = app.Services.CreateScope())
 {
-    app.MapOpenApi();
+    var services = scope.ServiceProvider;
+    await InitialSeeding.Initialize(services);
+}
+// Configure the HTTP request pipeline.
+//if (app.Environment.IsDevelopment())
+//{
+app.MapOpenApi();
     app.UseSwagger();
     app.UseSwaggerUI();
-}
+//}
 app.UseHttpsRedirection();
 
 app.UseAuthentication();

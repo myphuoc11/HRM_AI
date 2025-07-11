@@ -39,26 +39,114 @@ namespace HRM_AI.Services.Services
             _iIEmailHelper = iIEmailHelper;
             _mapper = mapper;
         }
+        public async Task<ResponseModel> ChangePassword(AccountChangePasswordModel accountChangePasswordModel)
+        {
+            var currentUserId = _claimService.GetCurrentUserId;
+            if (!currentUserId.HasValue)
+                return new ResponseModel
+                {
+                    Code = StatusCodes.Status401Unauthorized,
+                    Message = "Unauthorized"
+                };
 
+            var account = await _unitOfWork.AccountRepository.GetAsync(currentUserId.Value);
+            if (AuthenticationTools.VerifyPassword(accountChangePasswordModel.OldPassword, account!.HashedPassword))
+            {
+                account.HashedPassword = AuthenticationTools.HashPassword(accountChangePasswordModel.NewPassword);
+                _unitOfWork.AccountRepository.Update(account);
+                if (await _unitOfWork.SaveChangeAsync() > 0)
+                    return new ResponseModel
+                    {
+                        Message = "Change password successfully"
+                    };
+            }
+
+            return new ResponseModel
+            {
+                Code = StatusCodes.Status500InternalServerError,
+                Message = "Cannot change password"
+            };
+        }
+
+        public async Task<ResponseModel> ForgotPassword(AccountEmailModel accountEmailModel)
+        {
+            var account = await _unitOfWork.AccountRepository.FindByEmailAsync(accountEmailModel.Email);
+            if (account == null)
+                return new ResponseModel
+                {
+                    Code = StatusCodes.Status404NotFound,
+                    Message = "Account not found"
+                };
+
+            var resetPasswordToken =
+                AuthenticationTools.GenerateUniqueToken(
+                    DateTime.UtcNow.AddDays(Constant.ResetPasswordTokenValidityInMinutes));
+            account.ResetPasswordToken = resetPasswordToken;
+            _unitOfWork.AccountRepository.Update(account);
+            if (await _unitOfWork.SaveChangeAsync() > 0)
+            {
+                await _iIEmailHelper.SendEmailAsync(account.Email, "Reset your password",
+                    $"Your token is {resetPasswordToken}. The token will expire in {Constant.ResetPasswordTokenValidityInMinutes} minutes.",
+                    true);
+
+                return new ResponseModel
+                {
+                    Message = "An email has been sent, please check your inbox"
+                };
+            }
+
+            return new ResponseModel
+            {
+                Code = StatusCodes.Status500InternalServerError,
+                Message = "Cannot send email"
+            };
+        }
+
+        public async Task<ResponseModel> ResetPassword(AccountResetPasswordModel accountResetPasswordModel)
+        {
+            var account = await _unitOfWork.AccountRepository.FindByEmailAsync(accountResetPasswordModel.Email);
+            if (account == null)
+                return new ResponseModel
+                {
+                    Code = StatusCodes.Status404NotFound,
+                    Message = "Account not found"
+                };
+
+            if (accountResetPasswordModel.Token != account.ResetPasswordToken)
+                return new ResponseModel
+                {
+                    Code = StatusCodes.Status400BadRequest,
+                    Message = "Invalid token"
+                };
+
+            account.ResetPasswordToken = null;
+            account.HashedPassword = AuthenticationTools.HashPassword(accountResetPasswordModel.Password);
+            _unitOfWork.AccountRepository.Update(account);
+            if (await _unitOfWork.SaveChangeAsync() > 0)
+                return new ResponseModel
+                {
+                    Message = "Reset password successfully"
+                };
+
+            return new ResponseModel
+            {
+                Code = StatusCodes.Status500InternalServerError,
+                Message = "Cannot reset password"
+            };
+        }
         public Task<ResponseModel> AddRange(AccountAddRangeModel accountAddRangeModel)
         {
             throw new NotImplementedException();
         }
 
-        public Task<ResponseModel> ChangePassword(AccountChangePasswordModel accountChangePasswordModel)
-        {
-            throw new NotImplementedException();
-        }
+        
 
         public Task<ResponseModel> Delete(Guid id)
         {
             throw new NotImplementedException();
         }
 
-        public Task<ResponseModel> ForgotPassword(AccountEmailModel accountEmailModel)
-        {
-            throw new NotImplementedException();
-        }
+      
 
         public Task<ResponseModel> Get(string idOrUsername)
         {
@@ -80,15 +168,44 @@ namespace HRM_AI.Services.Services
             throw new NotImplementedException();
         }
 
-        public Task<ResponseModel> ResendVerificationEmail(AccountEmailModel accountEmailModel)
+        public async Task<ResponseModel> ResendVerificationEmail(AccountEmailModel accountEmailModel)
         {
-            throw new NotImplementedException();
+            var account = await _unitOfWork.AccountRepository.FindByEmailAsync(accountEmailModel.Email);
+            if (account == null)
+                return new ResponseModel
+                {
+                    Code = StatusCodes.Status404NotFound,
+                    Message = "Account not found"
+                };
+
+            if (account.EmailConfirmed)
+                return new ResponseModel
+                {
+                    Message = "Email has been verified"
+                };
+
+            // Update new verification code
+            account.VerificationCode = AuthenticationTools.GenerateDigitCode(Constant.VerificationCodeLength);
+            account.VerificationCodeExpiryTime = DateTime.UtcNow.AddMinutes(Constant.VerificationCodeValidityInMinutes);
+            _unitOfWork.AccountRepository.Update(account);
+            if (await _unitOfWork.SaveChangeAsync() > 0)
+            {
+                await SendVerificationEmail(account);
+
+                return new ResponseModel
+                {
+                    Message = "Resend verification email successfully"
+                };
+            }
+
+            return new ResponseModel
+            {
+                Code = StatusCodes.Status500InternalServerError,
+                Message = "Cannot resend verification email"
+            };
         }
 
-        public Task<ResponseModel> ResetPassword(AccountResetPasswordModel accountResetPasswordModel)
-        {
-            throw new NotImplementedException();
-        }
+      
 
         public Task<ResponseModel> Restore(Guid id)
         {
@@ -300,9 +417,54 @@ namespace HRM_AI.Services.Services
             };
         }
 
-        public Task<ResponseModel> VerifyEmail(string email, string verificationCode)
+        public async Task<ResponseModel> VerifyEmail(string email, string verificationCode)
         {
-            throw new NotImplementedException();
+            var account = await _unitOfWork.AccountRepository.FindByEmailAsync(email,
+                include: account =>
+                    account.Include(a => a.AccountRoles.Where(ar => ar.Role.Name == Repositories.Enums.Role.Employee.ToString())));
+            if (account == null)
+                return new ResponseModel
+                {
+                    Code = StatusCodes.Status404NotFound,
+                    Message = "Account not found"
+                };
+
+            if (account.EmailConfirmed)
+                return new ResponseModel
+                {
+                    Message = "Email has been verified"
+                };
+
+            if (account.VerificationCodeExpiryTime < DateTime.UtcNow)
+                return new ResponseModel
+                {
+                    Code = StatusCodes.Status400BadRequest,
+                    Message = "The code is expired"
+                };
+
+            if (account.VerificationCode == verificationCode)
+            {
+                account.EmailConfirmed = true;
+                account.VerificationCode = null;
+                account.VerificationCodeExpiryTime = null;
+                account.Status = AccountStatus.Active;
+                account.AccountRoles.First().Status = AccountStatus.Active;
+                _unitOfWork.AccountRepository.Update(account);
+                _unitOfWork.AccountRoleRepository.Update(account.AccountRoles.First());
+                if (await _unitOfWork.SaveChangeAsync() > 0)
+                {
+                    return new ResponseModel
+                    {
+                        Message = "Verify email successfully"
+                    };
+                }
+            }
+
+            return new ResponseModel
+            {
+                Code = StatusCodes.Status400BadRequest,
+                Message = "Cannot verify email"
+            };
         }
         private async Task SendVerificationEmail(Account account)
         {

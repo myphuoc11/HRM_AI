@@ -12,3 +12,4 @@ D:\CAPSTONE-SUPPORT\HRM-AI\HRM-AI.Repositories\obj\Debug\net9.0\refint\HRM-AI.Re
 D:\CAPSTONE-SUPPORT\HRM-AI\HRM-AI.Repositories\obj\Debug\net9.0\HRM-AI.Repositories.pdb
 D:\CAPSTONE-SUPPORT\HRM-AI\HRM-AI.Repositories\obj\Debug\net9.0\HRM-AI.Repositories.genruntimeconfig.cache
 D:\CAPSTONE-SUPPORT\HRM-AI\HRM-AI.Repositories\obj\Debug\net9.0\ref\HRM-AI.Repositories.dll
+D:\CAPSTONE-SUPPORT\HRM-AI\HRM-AI.Repositories\obj\Debug\net9.0\HRM-AI.Repositories.sourcelink.json

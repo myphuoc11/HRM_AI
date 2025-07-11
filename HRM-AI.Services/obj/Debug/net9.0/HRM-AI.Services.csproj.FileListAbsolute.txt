@@ -13,3 +13,4 @@ D:\CAPSTONE-SUPPORT\HRM-AI\HRM-AI.Services\obj\Debug\net9.0\HRM-AI.Services.dll
 D:\CAPSTONE-SUPPORT\HRM-AI\HRM-AI.Services\obj\Debug\net9.0\refint\HRM-AI.Services.dll
 D:\CAPSTONE-SUPPORT\HRM-AI\HRM-AI.Services\obj\Debug\net9.0\HRM-AI.Services.pdb
 D:\CAPSTONE-SUPPORT\HRM-AI\HRM-AI.Services\obj\Debug\net9.0\ref\HRM-AI.Services.dll
+D:\CAPSTONE-SUPPORT\HRM-AI\HRM-AI.Services\obj\Debug\net9.0\HRM-AI.Services.sourcelink.json
