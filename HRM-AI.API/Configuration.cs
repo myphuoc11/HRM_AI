@@ -21,6 +21,8 @@ using HRM_AI.Repositories.Repositories;
 using HRM_AI.Services.Interfaces;
 using HRM_AI.Services.Services;
 using HRM_AI.Services.Helpers;
+using Microsoft.EntityFrameworkCore;
+
 
 namespace HRM_AI.API
 {
@@ -34,11 +36,14 @@ namespace HRM_AI.API
             // Local database
             services.AddDbContext<AppDbContext>(options =>
             {
-                options.UseNpgsql(configuration.GetConnectionString("LocalDb"));
+                options.UseSqlServer(
+                    configuration.GetConnectionString("LocalDb")
+                    ?? throw new InvalidOperationException("Connection string 'LocalDb' not found."));
+
             });
 
-       
-            
+
+
             // JWT
             var secret = configuration["JWT:Secret"];
             ArgumentException.ThrowIfNullOrWhiteSpace(secret);

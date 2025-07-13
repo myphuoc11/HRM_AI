@@ -11,8 +11,6 @@ namespace HRM_AI.Repositories.Entities
         public Guid DeviceId { get; set; }
         public Guid Token { get; set; }
         public DateTime Expires { get; set; }
-
-        // Relationship
         public Account CreatedBy { get; set; } = null!;
     }
 }

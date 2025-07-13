@@ -1,0 +1,12 @@
+bin/
+obj/
+.vs/
+*.user
+*.suo
+*.cache
+*.dbmdl
+*.log
+.vscode/
+appsettings.Development.json
+secrets.json
+publish/

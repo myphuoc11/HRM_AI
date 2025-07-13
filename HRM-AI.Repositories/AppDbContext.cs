@@ -30,8 +30,17 @@ namespace HRM_AI.Repositories
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
-
+            modelBuilder.Ignore<BaseEntity>();
+            modelBuilder.Entity<BaseEntity>()
+                    .Property(e => e.CreationDate)
+                    .HasColumnType("datetime2");
             #region Entity Properties Configuration
+            foreach (var fk in modelBuilder.Model.GetEntityTypes()
+            .SelectMany(e => e.GetForeignKeys()))
+            {
+                fk.DeleteBehavior = DeleteBehavior.Restrict;
+            }
+            modelBuilder.Entity<BaseEntity>().UseTpcMappingStrategy();
 
             modelBuilder.Entity<Account>(entity =>
             {
@@ -61,6 +70,14 @@ namespace HRM_AI.Repositories
         public DbSet<Account> Accounts { get; set; }
         public DbSet<AccountRole> AccountRoles { get; set; }
         public DbSet<RefreshToken> RefreshTokens { get; set; }
+        public DbSet<Entities.Job> Jobs { get; set; }
+        public DbSet<JobDescription> JobDescriptions { get; set; }
+        public DbSet<JobHRAssignment> JobHRAssignments { get; set; }
+        public DbSet<CV> CVs { get; set; }
+        public DbSet<JobCV> JobCVs { get; set; }
+        public DbSet<Candidate> Candidates { get; set; }
+        public DbSet<CandidateAttribute> CandidateAttributes { get; set; }
+        public DbSet<Email> Emails { get; set; }
         public DbSet<Entities.Role> Roles { get; set; }
 
 

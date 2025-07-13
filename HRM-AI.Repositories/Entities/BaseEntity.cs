@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace HRM_AI.Repositories.Entities
 {
-    public class BaseEntity
+    public abstract class BaseEntity
     {
         public Guid Id { get; set; }
         public DateTime CreationDate { get; set; } = DateTime.UtcNow;
