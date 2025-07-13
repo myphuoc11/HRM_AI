@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("HRM-AI.Services")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+783c66e18b90e70ed74c3f731f077d5e5297e88a")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+c649cee47a7aa1b92b77904ba6d16bfaedab9048")]
 [assembly: System.Reflection.AssemblyProductAttribute("HRM-AI.Services")]
 [assembly: System.Reflection.AssemblyTitleAttribute("HRM-AI.Services")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
