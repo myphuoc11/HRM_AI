@@ -22,7 +22,7 @@ using HRM_AI.Services.Interfaces;
 using HRM_AI.Services.Services;
 using HRM_AI.Services.Helpers;
 using Microsoft.EntityFrameworkCore;
-
+using OpenAI.GPT3.Extensions;
 
 namespace HRM_AI.API
 {
@@ -105,6 +105,11 @@ namespace HRM_AI.API
                         .AllowCredentials();
                 });
             });
+            // OpenAI
+            services.AddOpenAIService(settings =>
+            {
+                settings.ApiKey = configuration["OpenAI:ApiKey"]!;
+            });
             //var clientUrls = configuration["URL:Client"]
             //    ?.Split(new[] { ';' }, StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries)
             //    .ToArray();
@@ -166,6 +171,9 @@ namespace HRM_AI.API
 
             // Account
             services.AddScoped<IAccountService, AccountService>();
+            services.AddHttpClient<ResumeParserAIService>();
+            services.AddSingleton<GoogleDriveService>();
+
             services.AddScoped<IAccountRepository, AccountRepository>();
 
             // AccountRole
@@ -176,6 +184,10 @@ namespace HRM_AI.API
 
             // RefreshToken
             services.AddScoped<IRefreshTokenRepository, RefreshTokenRepository>();
+
+            // OpenAi
+            services.AddScoped<ICVParseService, CVParseService>();
+
 
 
             #endregion

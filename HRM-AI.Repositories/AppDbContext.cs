@@ -70,13 +70,17 @@ namespace HRM_AI.Repositories
         public DbSet<Account> Accounts { get; set; }
         public DbSet<AccountRole> AccountRoles { get; set; }
         public DbSet<RefreshToken> RefreshTokens { get; set; }
-        public DbSet<Entities.Job> Jobs { get; set; }
-        public DbSet<JobDescription> JobDescriptions { get; set; }
-        public DbSet<JobHRAssignment> JobHRAssignments { get; set; }
-        public DbSet<CV> CVs { get; set; }
-        public DbSet<JobCV> JobCVs { get; set; }
-        public DbSet<Candidate> Candidates { get; set; }
-        public DbSet<CandidateAttribute> CandidateAttributes { get; set; }
+        public DbSet<CVApplicant> CVApplicants { get; set; }
+        public DbSet<CVApplicantDetails> CVApplicantDetails { get; set; }
+        public DbSet<Campaign> Campaigns { get; set; }
+        public DbSet<CampaignPosition> CampaignPositions { get; set; }
+        public DbSet<CampaignPositionDetail> CampaignPositionDetails { get; set; }
+        public DbSet<Department> Departments { get; set; }
+        public DbSet<Interviewer> Interviewers { get; set; }
+        public DbSet<InterviewOutcome> InterviewOutcomes { get; set; }
+        public DbSet<InterviewSchedule> InterviewSchedules { get; set; }
+        public DbSet<RequestOnboard> RequestOnboards { get; set; }
+        //public DbSet<JobCV> JobCVs { get; set; }
         public DbSet<Email> Emails { get; set; }
         public DbSet<Entities.Role> Roles { get; set; }
 

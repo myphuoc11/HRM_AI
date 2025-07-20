@@ -34,11 +34,18 @@ namespace HRM_AI.Repositories.Entities
         public DateTime? VerificationCodeExpiryTime { get; set; }
         public string? ResetPasswordToken { get; set; }
 
-
+        public Guid? DepartmentId { get; set; }
+        public Department? Department { get; set; } = null!;
         // Relationship
 
         public virtual ICollection<AccountRole> AccountRoles { get; set; } = new List<AccountRole>();
+        public virtual ICollection<Campaign> Campaigns { get; set; } = new List<Campaign>();
+        public virtual ICollection<CampaignPosition> CampaignPositions { get; set; } = new List<CampaignPosition>();
         public virtual ICollection<RefreshToken> RefreshTokens { get; set; } = new List<RefreshToken>();
+        public virtual ICollection<InterviewSchedule> InterviewSchedules { get; set; } = new List<InterviewSchedule>();
+        public virtual ICollection<Interviewer> Interviewers { get; set; } = new List<Interviewer>();
+        public virtual ICollection<CVApplicant> CVApplicants { get; set; } = new List<CVApplicant>();
+
 
     }
 }
