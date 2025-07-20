@@ -6,10 +6,10 @@ using System.Threading.Tasks;
 
 namespace HRM_AI.Repositories.Entities
 {
-    public class CandidateAttribute : BaseEntity
+    public class CVApplicantDetails : BaseEntity
     {
-        public Guid CandidateId { get; set; }
-        public Candidate Candidate { get; set; } = null!;
+        public Guid CVApplicantId { get; set; }
+        public CVApplicant CVApplicant { get; set; } = null!;
         public string Type { get; set; }
         public string Key { get; set; } = null!;
         public string Value { get; set; } = null!;

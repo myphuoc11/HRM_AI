@@ -63,6 +63,9 @@ namespace HRM_AI.Repositories.Migrations
                     b.Property<DateOnly?>("DateOfBirth")
                         .HasColumnType("date");
 
+                    b.Property<Guid?>("DepartmentId")
+                        .HasColumnType("uniqueidentifier");
+
                     b.Property<string>("Email")
                         .IsRequired()
                         .HasMaxLength(256)
@@ -115,6 +118,8 @@ namespace HRM_AI.Repositories.Migrations
                     b.Property<DateTime?>("VerificationCodeExpiryTime")
                         .HasColumnType("datetime2");
 
+                    b.HasIndex("DepartmentId");
+
                     b.HasIndex("Email")
                         .IsUnique()
                         .HasFilter("[Email] IS NOT NULL");
@@ -146,9 +151,23 @@ namespace HRM_AI.Repositories.Migrations
                     b.ToTable("AccountRoles");
                 });
 
-            modelBuilder.Entity("HRM_AI.Repositories.Entities.CV", b =>
+            modelBuilder.Entity("HRM_AI.Repositories.Entities.CVApplicant", b =>
                 {
                     b.HasBaseType("HRM_AI.Repositories.Entities.BaseEntity");
+
+                    b.Property<Guid?>("CVApplicantId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("CampaignPositionId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("ContactName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("ContactValue")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("FileAlt")
                         .IsRequired()
@@ -158,59 +177,31 @@ namespace HRM_AI.Repositories.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("Status")
-                        .HasColumnType("int");
-
-                    b.HasIndex("CreatedById");
-
-                    b.ToTable("CVs");
-                });
-
-            modelBuilder.Entity("HRM_AI.Repositories.Entities.Candidate", b =>
-                {
-                    b.HasBaseType("HRM_AI.Repositories.Entities.BaseEntity");
-
-                    b.Property<Guid?>("ApproveByGmId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<Guid>("CVId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<string>("Email")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<string>("FullName")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("InterviewResult")
-                        .HasColumnType("int");
-
-                    b.Property<string>("OfferNote")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("OfferStatus")
-                        .HasColumnType("int");
 
                     b.Property<string>("Phone")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.HasIndex("ApproveByGmId");
+                    b.Property<int>("Status")
+                        .HasColumnType("int");
 
-                    b.HasIndex("CVId");
+                    b.HasIndex("CVApplicantId");
+
+                    b.HasIndex("CampaignPositionId");
 
                     b.HasIndex("CreatedById");
 
-                    b.ToTable("Candidates");
+                    b.ToTable("CVApplicants");
                 });
 
-            modelBuilder.Entity("HRM_AI.Repositories.Entities.CandidateAttribute", b =>
+            modelBuilder.Entity("HRM_AI.Repositories.Entities.CVApplicantDetails", b =>
                 {
                     b.HasBaseType("HRM_AI.Repositories.Entities.BaseEntity");
 
-                    b.Property<Guid>("CandidateId")
+                    b.Property<Guid>("CVApplicantId")
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<int>("GroupIndex")
@@ -228,9 +219,107 @@ namespace HRM_AI.Repositories.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.HasIndex("CandidateId");
+                    b.HasIndex("CVApplicantId");
 
-                    b.ToTable("CandidateAttributes");
+                    b.ToTable("CVApplicantDetails");
+                });
+
+            modelBuilder.Entity("HRM_AI.Repositories.Entities.Campaign", b =>
+                {
+                    b.HasBaseType("HRM_AI.Repositories.Entities.BaseEntity");
+
+                    b.Property<DateTime>("DateTime")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("EndTime")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasIndex("CreatedById");
+
+                    b.ToTable("Campaigns");
+                });
+
+            modelBuilder.Entity("HRM_AI.Repositories.Entities.CampaignPosition", b =>
+                {
+                    b.HasBaseType("HRM_AI.Repositories.Entities.BaseEntity");
+
+                    b.Property<Guid>("CampaignId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("DepartmentId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.PrimitiveCollection<string>("Embedding")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int?>("TotalSlot")
+                        .HasColumnType("int");
+
+                    b.HasIndex("CampaignId");
+
+                    b.HasIndex("CreatedById");
+
+                    b.HasIndex("DepartmentId");
+
+                    b.ToTable("CampaignPositions");
+                });
+
+            modelBuilder.Entity("HRM_AI.Repositories.Entities.CampaignPositionDetail", b =>
+                {
+                    b.HasBaseType("HRM_AI.Repositories.Entities.BaseEntity");
+
+                    b.Property<Guid>("CampaignPositionId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<int>("GroupIndex")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Key")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Type")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Value")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasIndex("CampaignPositionId");
+
+                    b.ToTable("CampaignPositionDetails");
+                });
+
+            modelBuilder.Entity("HRM_AI.Repositories.Entities.Department", b =>
+                {
+                    b.HasBaseType("HRM_AI.Repositories.Entities.BaseEntity");
+
+                    b.Property<string>("Code")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("DepartmentName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Description")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.ToTable("Departments");
                 });
 
             modelBuilder.Entity("HRM_AI.Repositories.Entities.Email", b =>
@@ -254,76 +343,74 @@ namespace HRM_AI.Repositories.Migrations
                     b.ToTable("Emails");
                 });
 
-            modelBuilder.Entity("HRM_AI.Repositories.Entities.Job", b =>
+            modelBuilder.Entity("HRM_AI.Repositories.Entities.InterviewOutcome", b =>
                 {
                     b.HasBaseType("HRM_AI.Repositories.Entities.BaseEntity");
 
-                    b.Property<string>("Description")
-                        .IsRequired()
+                    b.Property<string>("Feedback")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("Title")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<Guid>("InterviewScheduleId")
+                        .HasColumnType("uniqueidentifier");
 
                     b.HasIndex("CreatedById");
 
-                    b.ToTable("Jobs");
+                    b.HasIndex("InterviewScheduleId");
+
+                    b.ToTable("InterviewOutcomes");
                 });
 
-            modelBuilder.Entity("HRM_AI.Repositories.Entities.JobCV", b =>
+            modelBuilder.Entity("HRM_AI.Repositories.Entities.InterviewSchedule", b =>
                 {
                     b.HasBaseType("HRM_AI.Repositories.Entities.BaseEntity");
 
-                    b.Property<Guid>("CVId")
+                    b.Property<Guid>("CVApplicantId")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<Guid>("JobId")
+                    b.Property<DateTime?>("EndTime")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("InterviewType")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Notes")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("Round")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("StartTime")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("Status")
+                        .HasColumnType("int");
+
+                    b.HasIndex("CVApplicantId");
+
+                    b.HasIndex("CreatedById");
+
+                    b.ToTable("InterviewSchedules");
+                });
+
+            modelBuilder.Entity("HRM_AI.Repositories.Entities.Interviewer", b =>
+                {
+                    b.HasBaseType("HRM_AI.Repositories.Entities.BaseEntity");
+
+                    b.Property<Guid>("InterviewScheduleId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("InterviewerAccountId")
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<int>("Status")
                         .HasColumnType("int");
 
-                    b.HasIndex("CVId");
+                    b.HasIndex("InterviewScheduleId");
 
-                    b.HasIndex("CreatedById");
+                    b.HasIndex("InterviewerAccountId");
 
-                    b.HasIndex("JobId");
-
-                    b.ToTable("JobCVs");
-                });
-
-            modelBuilder.Entity("HRM_AI.Repositories.Entities.JobDescription", b =>
-                {
-                    b.HasBaseType("HRM_AI.Repositories.Entities.BaseEntity");
-
-                    b.Property<string>("Content")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<Guid>("JobId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.HasIndex("JobId");
-
-                    b.ToTable("JobDescriptions");
-                });
-
-            modelBuilder.Entity("HRM_AI.Repositories.Entities.JobHRAssignment", b =>
-                {
-                    b.HasBaseType("HRM_AI.Repositories.Entities.BaseEntity");
-
-                    b.Property<Guid>("HRId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<Guid>("JobId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.HasIndex("HRId");
-
-                    b.HasIndex("JobId");
-
-                    b.ToTable("JobHRAssignments");
+                    b.ToTable("Interviewers");
                 });
 
             modelBuilder.Entity("HRM_AI.Repositories.Entities.RefreshToken", b =>
@@ -342,6 +429,13 @@ namespace HRM_AI.Repositories.Migrations
                     b.HasIndex("CreatedById");
 
                     b.ToTable("RefreshTokens");
+                });
+
+            modelBuilder.Entity("HRM_AI.Repositories.Entities.RequestOnboard", b =>
+                {
+                    b.HasBaseType("HRM_AI.Repositories.Entities.BaseEntity");
+
+                    b.ToTable("RequestOnboards");
                 });
 
             modelBuilder.Entity("HRM_AI.Repositories.Entities.Role", b =>
@@ -364,6 +458,16 @@ namespace HRM_AI.Repositories.Migrations
                     b.ToTable("Roles");
                 });
 
+            modelBuilder.Entity("HRM_AI.Repositories.Entities.Account", b =>
+                {
+                    b.HasOne("HRM_AI.Repositories.Entities.Department", "Department")
+                        .WithMany("Employees")
+                        .HasForeignKey("DepartmentId")
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    b.Navigation("Department");
+                });
+
             modelBuilder.Entity("HRM_AI.Repositories.Entities.AccountRole", b =>
                 {
                     b.HasOne("HRM_AI.Repositories.Entities.Account", "Account")
@@ -383,116 +487,140 @@ namespace HRM_AI.Repositories.Migrations
                     b.Navigation("Role");
                 });
 
-            modelBuilder.Entity("HRM_AI.Repositories.Entities.CV", b =>
+            modelBuilder.Entity("HRM_AI.Repositories.Entities.CVApplicant", b =>
+                {
+                    b.HasOne("HRM_AI.Repositories.Entities.CVApplicant", null)
+                        .WithMany("CVApplicants")
+                        .HasForeignKey("CVApplicantId")
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    b.HasOne("HRM_AI.Repositories.Entities.CampaignPosition", "CampaignPosition")
+                        .WithMany("CVApplicants")
+                        .HasForeignKey("CampaignPositionId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("HRM_AI.Repositories.Entities.Account", "CreatedBy")
+                        .WithMany("CVApplicants")
+                        .HasForeignKey("CreatedById")
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    b.Navigation("CampaignPosition");
+
+                    b.Navigation("CreatedBy");
+                });
+
+            modelBuilder.Entity("HRM_AI.Repositories.Entities.CVApplicantDetails", b =>
+                {
+                    b.HasOne("HRM_AI.Repositories.Entities.CVApplicant", "CVApplicant")
+                        .WithMany()
+                        .HasForeignKey("CVApplicantId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("CVApplicant");
+                });
+
+            modelBuilder.Entity("HRM_AI.Repositories.Entities.Campaign", b =>
                 {
                     b.HasOne("HRM_AI.Repositories.Entities.Account", "CreatedBy")
-                        .WithMany()
+                        .WithMany("Campaigns")
                         .HasForeignKey("CreatedById")
                         .OnDelete(DeleteBehavior.Restrict);
 
                     b.Navigation("CreatedBy");
                 });
 
-            modelBuilder.Entity("HRM_AI.Repositories.Entities.Candidate", b =>
+            modelBuilder.Entity("HRM_AI.Repositories.Entities.CampaignPosition", b =>
                 {
-                    b.HasOne("HRM_AI.Repositories.Entities.Account", "ApproveByGm")
-                        .WithMany()
-                        .HasForeignKey("ApproveByGmId")
-                        .OnDelete(DeleteBehavior.Restrict);
-
-                    b.HasOne("HRM_AI.Repositories.Entities.CV", "CV")
-                        .WithMany("Candidates")
-                        .HasForeignKey("CVId")
+                    b.HasOne("HRM_AI.Repositories.Entities.Campaign", "Campaign")
+                        .WithMany("CampaignPositions")
+                        .HasForeignKey("CampaignId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
+                    b.HasOne("HRM_AI.Repositories.Entities.Account", "CreatedBy")
+                        .WithMany("CampaignPositions")
+                        .HasForeignKey("CreatedById")
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    b.HasOne("HRM_AI.Repositories.Entities.Department", "Department")
+                        .WithMany("CampaignPositions")
+                        .HasForeignKey("DepartmentId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("Campaign");
+
+                    b.Navigation("CreatedBy");
+
+                    b.Navigation("Department");
+                });
+
+            modelBuilder.Entity("HRM_AI.Repositories.Entities.CampaignPositionDetail", b =>
+                {
+                    b.HasOne("HRM_AI.Repositories.Entities.CampaignPosition", "CampaignPosition")
+                        .WithMany("CampaignPositionDetails")
+                        .HasForeignKey("CampaignPositionId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("CampaignPosition");
+                });
+
+            modelBuilder.Entity("HRM_AI.Repositories.Entities.InterviewOutcome", b =>
+                {
                     b.HasOne("HRM_AI.Repositories.Entities.Account", "CreatedBy")
                         .WithMany()
                         .HasForeignKey("CreatedById")
                         .OnDelete(DeleteBehavior.Restrict);
 
-                    b.Navigation("ApproveByGm");
-
-                    b.Navigation("CV");
-
-                    b.Navigation("CreatedBy");
-                });
-
-            modelBuilder.Entity("HRM_AI.Repositories.Entities.CandidateAttribute", b =>
-                {
-                    b.HasOne("HRM_AI.Repositories.Entities.Candidate", "Candidate")
-                        .WithMany("CandidateAttributes")
-                        .HasForeignKey("CandidateId")
+                    b.HasOne("HRM_AI.Repositories.Entities.InterviewSchedule", "InterviewSchedule")
+                        .WithMany()
+                        .HasForeignKey("InterviewScheduleId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.Navigation("Candidate");
-                });
-
-            modelBuilder.Entity("HRM_AI.Repositories.Entities.Job", b =>
-                {
-                    b.HasOne("HRM_AI.Repositories.Entities.Account", "CreatedBy")
-                        .WithMany()
-                        .HasForeignKey("CreatedById")
-                        .OnDelete(DeleteBehavior.Restrict);
-
                     b.Navigation("CreatedBy");
+
+                    b.Navigation("InterviewSchedule");
                 });
 
-            modelBuilder.Entity("HRM_AI.Repositories.Entities.JobCV", b =>
+            modelBuilder.Entity("HRM_AI.Repositories.Entities.InterviewSchedule", b =>
                 {
-                    b.HasOne("HRM_AI.Repositories.Entities.CV", "CV")
-                        .WithMany("JobCVs")
-                        .HasForeignKey("CVId")
+                    b.HasOne("HRM_AI.Repositories.Entities.CVApplicant", "CVApplicant")
+                        .WithMany("InterviewSchedules")
+                        .HasForeignKey("CVApplicantId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.HasOne("HRM_AI.Repositories.Entities.Account", "CreatedBy")
-                        .WithMany()
+                        .WithMany("InterviewSchedules")
                         .HasForeignKey("CreatedById")
                         .OnDelete(DeleteBehavior.Restrict);
 
-                    b.HasOne("HRM_AI.Repositories.Entities.Job", "Job")
-                        .WithMany("JobCVs")
-                        .HasForeignKey("JobId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.Navigation("CV");
+                    b.Navigation("CVApplicant");
 
                     b.Navigation("CreatedBy");
-
-                    b.Navigation("Job");
                 });
 
-            modelBuilder.Entity("HRM_AI.Repositories.Entities.JobDescription", b =>
+            modelBuilder.Entity("HRM_AI.Repositories.Entities.Interviewer", b =>
                 {
-                    b.HasOne("HRM_AI.Repositories.Entities.Job", "Job")
-                        .WithMany("JobDescriptions")
-                        .HasForeignKey("JobId")
+                    b.HasOne("HRM_AI.Repositories.Entities.InterviewSchedule", "InterviewSchedule")
+                        .WithMany("Interviewers")
+                        .HasForeignKey("InterviewScheduleId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.Navigation("Job");
-                });
-
-            modelBuilder.Entity("HRM_AI.Repositories.Entities.JobHRAssignment", b =>
-                {
-                    b.HasOne("HRM_AI.Repositories.Entities.Account", "HR")
-                        .WithMany()
-                        .HasForeignKey("HRId")
+                    b.HasOne("HRM_AI.Repositories.Entities.Account", "InterviewerAccount")
+                        .WithMany("Interviewers")
+                        .HasForeignKey("InterviewerAccountId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("HRM_AI.Repositories.Entities.Job", "Job")
-                        .WithMany("JobHRAssignments")
-                        .HasForeignKey("JobId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
+                    b.Navigation("InterviewSchedule");
 
-                    b.Navigation("HR");
-
-                    b.Navigation("Job");
+                    b.Navigation("InterviewerAccount");
                 });
 
             modelBuilder.Entity("HRM_AI.Repositories.Entities.RefreshToken", b =>
@@ -509,28 +637,48 @@ namespace HRM_AI.Repositories.Migrations
                 {
                     b.Navigation("AccountRoles");
 
+                    b.Navigation("CVApplicants");
+
+                    b.Navigation("CampaignPositions");
+
+                    b.Navigation("Campaigns");
+
+                    b.Navigation("InterviewSchedules");
+
+                    b.Navigation("Interviewers");
+
                     b.Navigation("RefreshTokens");
                 });
 
-            modelBuilder.Entity("HRM_AI.Repositories.Entities.CV", b =>
+            modelBuilder.Entity("HRM_AI.Repositories.Entities.CVApplicant", b =>
                 {
-                    b.Navigation("Candidates");
+                    b.Navigation("CVApplicants");
 
-                    b.Navigation("JobCVs");
+                    b.Navigation("InterviewSchedules");
                 });
 
-            modelBuilder.Entity("HRM_AI.Repositories.Entities.Candidate", b =>
+            modelBuilder.Entity("HRM_AI.Repositories.Entities.Campaign", b =>
                 {
-                    b.Navigation("CandidateAttributes");
+                    b.Navigation("CampaignPositions");
                 });
 
-            modelBuilder.Entity("HRM_AI.Repositories.Entities.Job", b =>
+            modelBuilder.Entity("HRM_AI.Repositories.Entities.CampaignPosition", b =>
                 {
-                    b.Navigation("JobCVs");
+                    b.Navigation("CVApplicants");
 
-                    b.Navigation("JobDescriptions");
+                    b.Navigation("CampaignPositionDetails");
+                });
 
-                    b.Navigation("JobHRAssignments");
+            modelBuilder.Entity("HRM_AI.Repositories.Entities.Department", b =>
+                {
+                    b.Navigation("CampaignPositions");
+
+                    b.Navigation("Employees");
+                });
+
+            modelBuilder.Entity("HRM_AI.Repositories.Entities.InterviewSchedule", b =>
+                {
+                    b.Navigation("Interviewers");
                 });
 
             modelBuilder.Entity("HRM_AI.Repositories.Entities.Role", b =>

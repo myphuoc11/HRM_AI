@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("HRM-AI.Repositories")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+c649cee47a7aa1b92b77904ba6d16bfaedab9048")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+a7b9cf5fc8cab585b1f03882f99ccde5689f5d4d")]
 [assembly: System.Reflection.AssemblyProductAttribute("HRM-AI.Repositories")]
 [assembly: System.Reflection.AssemblyTitleAttribute("HRM-AI.Repositories")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

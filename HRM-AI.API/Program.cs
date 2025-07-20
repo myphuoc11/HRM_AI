@@ -2,7 +2,10 @@
 using HRM_AI.API;
 using HRM_AI.API.Middlewares;
 using HRM_AI.Repositories.Common;
+using HRM_AI.Services.Services;
 using Microsoft.OpenApi.Models;
+using OpenAI;
+using OpenAI.GPT3.Extensions;
 
 var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
@@ -11,11 +14,27 @@ builder.Services.AddControllers().AddJsonOptions(options =>
     // Ignore all fields with null value in response
     options.JsonSerializerOptions.DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull;
 
+}).AddNewtonsoftJson(); 
+builder.Services.AddHttpClient<ResumeParserAIService>(client =>
+{
+    client.BaseAddress = new Uri(builder.Configuration["ResumeParserAI:BaseUrl"]);
 });
+builder.Services.AddOpenAIService(settings =>
+{
+    settings.ApiKey = builder.Configuration["OpenAI:ApiKey"];
+});
+
+
+builder.Services.AddControllers().AddNewtonsoftJson();
+
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(x =>
 {
-    x.SwaggerDoc("v1", new OpenApiInfo { Title = builder.Configuration["JWT:ValidAudience"], Version = "v1" });
+    x.SwaggerDoc("v1", new OpenApiInfo
+    {
+        Title = builder.Configuration["JWT:ValidAudience"],
+        Version = "v1"
+    });
     x.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
     {
         In = ParameterLocation.Header,
@@ -25,13 +44,10 @@ builder.Services.AddSwaggerGen(x =>
         BearerFormat = "JWT",
         Scheme = "Bearer"
     });
-    x.AddSecurityRequirement(new OpenApiSecurityRequirement
-    {
+    x.AddSecurityRequirement(new OpenApiSecurityRequirement {
         {
-            new OpenApiSecurityScheme
-            {
-                Reference = new OpenApiReference
-                {
+            new OpenApiSecurityScheme {
+                Reference = new OpenApiReference {
                     Type = ReferenceType.SecurityScheme,
                     Id = "Bearer"
                 }
@@ -39,7 +55,10 @@ builder.Services.AddSwaggerGen(x =>
             new string[] { }
         }
     });
+    x.UseInlineDefinitionsForEnums();
+    // Nếu cần, thêm: x.ResolveConflictingActions(api => api.First());
 });
+
 
 // Add API configuration
 builder.Services.AddApiConfiguration(builder.Configuration);
@@ -47,10 +66,6 @@ builder.Services.AddApiConfiguration(builder.Configuration);
 builder.Services.AddHttpContextAccessor();
 
 builder.Services.AddControllers();
-builder.Services.AddSwaggerGen(options =>
-{
-    options.UseInlineDefinitionsForEnums();
-});
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
 
 var app = builder.Build();
@@ -69,9 +84,8 @@ using (var scope = app.Services.CreateScope())
 // Configure the HTTP request pipeline.
 //if (app.Environment.IsDevelopment())
 //{
-app.MapOpenApi();
-    app.UseSwagger();
-    app.UseSwaggerUI();
+app.UseSwagger();
+app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "HRM_AI API v1"));
 //}
 app.UseHttpsRedirection();
 

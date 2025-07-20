@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using HRM_AI.Repositories.Interfaces;
+using HRM_AI.Repositories.Repositories;
 using Microsoft.EntityFrameworkCore.Storage;
 
 namespace HRM_AI.Repositories.Common
