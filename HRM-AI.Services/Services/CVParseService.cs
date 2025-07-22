@@ -11,15 +11,7 @@ using HRM_AI.Services.Interfaces;
 using HRM_AI.Services.Models;
 using Microsoft.AspNetCore.Http;
 using Newtonsoft.Json;
-
-public class ParsedFieldModel
-{
-    public string Type { get; set; } = null!;
-    public string Key { get; set; } = null!;
-    public string Value { get; set; } = null!;
-    public int GroupIndex { get; set; }
-}
-
+using HRM_AI.Repositories.Models.ParsedFieldModels;
 
 public class CVParseService : ICVParseService
 {
