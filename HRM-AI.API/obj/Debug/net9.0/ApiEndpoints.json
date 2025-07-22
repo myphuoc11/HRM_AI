@@ -1,5 +1,130 @@
 [
   {
+    "ContainingType": "HRM_AI.API.Controllers.CampaignController",
+    "Method": "GetAllCampaigns",
+    "RelativePath": "api/campaigns",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "DepartmentId",
+        "Type": "System.Nullable\u00601[[System.Guid, System.Private.CoreLib, Version=9.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]",
+        "IsRequired": false
+      },
+      {
+        "Name": "StartTime",
+        "Type": "System.Nullable\u00601[[System.DateTime, System.Private.CoreLib, Version=9.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]",
+        "IsRequired": false
+      },
+      {
+        "Name": "EndTime",
+        "Type": "System.Nullable\u00601[[System.DateTime, System.Private.CoreLib, Version=9.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]",
+        "IsRequired": false
+      },
+      {
+        "Name": "PageIndex",
+        "Type": "System.Int32",
+        "IsRequired": false
+      },
+      {
+        "Name": "PageSize",
+        "Type": "System.Int32",
+        "IsRequired": false
+      },
+      {
+        "Name": "Search",
+        "Type": "System.String",
+        "IsRequired": false
+      },
+      {
+        "Name": "Order",
+        "Type": "System.String",
+        "IsRequired": false
+      },
+      {
+        "Name": "OrderByDescending",
+        "Type": "System.Boolean",
+        "IsRequired": false
+      },
+      {
+        "Name": "IsDeleted",
+        "Type": "System.Nullable\u00601[[System.Boolean, System.Private.CoreLib, Version=9.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]",
+        "IsRequired": false
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "HRM_AI.API.Controllers.CampaignController",
+    "Method": "CreateCampaign",
+    "RelativePath": "api/campaigns",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "campaignAddModel",
+        "Type": "HRM_AI.Services.Models.CampaignModels.CampaignAddModel",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "HRM_AI.API.Controllers.CampaignController",
+    "Method": "GetCampaignById",
+    "RelativePath": "api/campaigns/{id}",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "id",
+        "Type": "System.Guid",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "HRM_AI.API.Controllers.CampaignController",
+    "Method": "UpdateCampaign",
+    "RelativePath": "api/campaigns/{id}",
+    "HttpMethod": "PUT",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "id",
+        "Type": "System.Guid",
+        "IsRequired": true
+      },
+      {
+        "Name": "campaignUpdateModel",
+        "Type": "HRM_AI.Services.Models.CampaignModels.CampaignUpdateModel",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "HRM_AI.API.Controllers.CampaignController",
+    "Method": "DeleteCampaign",
+    "RelativePath": "api/campaigns/{id}",
+    "HttpMethod": "DELETE",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "id",
+        "Type": "System.Guid",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
     "ContainingType": "HRM_AI.API.Controllers.CvController",
     "Method": "ParseCV",
     "RelativePath": "api/cv/parse",
@@ -43,22 +168,6 @@
         "Name": "file",
         "Type": "Microsoft.AspNetCore.Http.IFormFile",
         "IsRequired": false
-      }
-    ],
-    "ReturnTypes": []
-  },
-  {
-    "ContainingType": "HRM_AI.API.Controllers.JobController",
-    "Method": "NewJob",
-    "RelativePath": "api/jobs",
-    "HttpMethod": "POST",
-    "IsController": true,
-    "Order": 0,
-    "Parameters": [
-      {
-        "Name": "jobAddRangeModel",
-        "Type": "HRM_AI.Services.Models.JobModels.JobAddRangeModel",
-        "IsRequired": true
       }
     ],
     "ReturnTypes": []

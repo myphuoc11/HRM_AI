@@ -9,7 +9,7 @@ namespace HRM_AI.Repositories.Entities
     public class Campaign : BaseEntity
     {
         public string Name { get; set; }
-        public DateTime DateTime { get; set; }
+        public DateTime StartTime { get; set; }
         public DateTime EndTime { get; set; }
         public string Description { get; set; }
         public Account CreatedBy { get; set; }

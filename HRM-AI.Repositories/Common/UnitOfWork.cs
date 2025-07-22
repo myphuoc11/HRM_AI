@@ -16,7 +16,17 @@ namespace HRM_AI.Repositories.Common
             IAccountRepository accountRepository,
              IAccountRoleRepository accountRoleRepository,
              IRoleRepository roleRepository,
-          IRefreshTokenRepository refreshTokenRepository
+          IRefreshTokenRepository refreshTokenRepository,
+            ICampaignPositionDetailRepository campaignPositionDetailRepository,
+            ICampaignPositionRepository campaignPositionRepository,
+            ICampaignRepository campaignRepository,
+            ICVApplicantDetailsRepository cVApplicantDetailsRepository,
+            ICVApplicantRepository cVApplicantRepository,
+            IDepartmentRepository departmentRepository,
+            IInterviewScheduleRepository interviewScheduleRepository,
+            IInterviewerRepository interviewerRepository,
+            IInterviewOutcomeRepository interviewOutcomeRepository
+
 
             )
         {
@@ -25,6 +35,15 @@ namespace HRM_AI.Repositories.Common
             AccountRoleRepository = accountRoleRepository;
             RoleRepository = roleRepository;
             RefreshTokenRepository = refreshTokenRepository;
+            CampaignPositionDetailRepository = campaignPositionDetailRepository;
+            CampaignPositionRepository = campaignPositionRepository;
+            CampaignRepository = campaignRepository;
+            CVApplicantDetailsRepository = cVApplicantDetailsRepository;
+            CVApplicantRepository = cVApplicantRepository;
+            DepartmentRepository = departmentRepository;
+            InterviewScheduleRepository = interviewScheduleRepository;
+            InterviewerRepository = interviewerRepository;
+            InterviewOutcomeRepository = interviewOutcomeRepository;
         }
 
         public AppDbContext Context { get; }
@@ -33,6 +52,23 @@ namespace HRM_AI.Repositories.Common
         public IRoleRepository RoleRepository { get; }
         public IRefreshTokenRepository RefreshTokenRepository { get; }
 
+        public ICampaignPositionDetailRepository CampaignPositionDetailRepository { get; }
+
+        public ICampaignPositionRepository CampaignPositionRepository { get; }
+
+        public ICampaignRepository CampaignRepository { get; }
+
+        public ICVApplicantDetailsRepository CVApplicantDetailsRepository { get; }
+
+        public ICVApplicantRepository CVApplicantRepository { get; }
+
+        public IDepartmentRepository DepartmentRepository { get; }
+
+        public IInterviewScheduleRepository InterviewScheduleRepository { get; }
+
+        public IInterviewerRepository InterviewerRepository { get; }
+
+        public IInterviewOutcomeRepository InterviewOutcomeRepository { get; }
 
         public async Task<int> SaveChangeAsync()
         {
