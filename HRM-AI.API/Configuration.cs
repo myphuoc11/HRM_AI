@@ -188,6 +188,25 @@ namespace HRM_AI.API
             // OpenAi
             services.AddScoped<ICVParseService, CVParseService>();
 
+            // Interviewer
+            services.AddScoped<IInterviewerRepository, InterviewerRepository>();
+            // InterviewSchedule
+            services.AddScoped<IInterviewScheduleRepository, InterviewScheduleRepository>();
+            // InterviewOutcome
+            services.AddScoped<IInterviewOutcomeRepository, InterviewOutcomeRepository>();
+            // CVApplicant
+            services.AddScoped<ICVApplicantRepository, CVApplicantRepository>();
+            // CVApplicantDetails
+            services.AddScoped<ICVApplicantDetailsRepository, CVApplicantDetailsRepository>();
+            // CampaignPosition
+            services.AddScoped<ICampaignPositionRepository, CampaignPositionRepository>();
+            // Campaign
+            services.AddScoped<ICampaignRepository, CampaignRepository>();
+            services.AddScoped<ICampaignService, CampaignService>();
+            // Department
+            services.AddScoped<IDepartmentRepository, DepartmentRepository>();
+            // CampaignPositionDetail
+            services.AddScoped<ICampaignPositionDetailRepository, CampaignPositionDetailRepository>();
 
 
             #endregion

@@ -10,12 +10,22 @@ using System.Text;
 using HRM_AI.Services.Interfaces;
 using HRM_AI.Services.Models;
 using Microsoft.AspNetCore.Http;
+using Newtonsoft.Json;
+
+public class ParsedFieldModel
+{
+    public string Type { get; set; } = null!;
+    public string Key { get; set; } = null!;
+    public string Value { get; set; } = null!;
+    public int GroupIndex { get; set; }
+}
+
 
 public class CVParseService : ICVParseService
 {
     private readonly IOpenAIService _openAI;
 
-    public CVParseService(IOpenAIService openAI) 
+    public CVParseService(IOpenAIService openAI)
     {
         _openAI = openAI;
     }
@@ -37,61 +47,108 @@ public class CVParseService : ICVParseService
             await file.CopyToAsync(stream);
         }
 
-        string extractedText = Path.GetExtension(tempFilePath).ToLower() switch
+        string extractedText;
+
+        var extension = Path.GetExtension(tempFilePath).ToLower();
+        if (extension == ".pdf")
         {
-            ".pdf" => ExtractTextFromPdf(tempFilePath),
-            ".jpg" or ".jpeg" or ".png" => ExtractTextFromImage(tempFilePath),
-            _ => throw new NotSupportedException("Unsupported file type.")
-        };
-
-        string prompt = $"""
-        Đây là nội dung một CV ứng viên:
-
-        {extractedText}
-
-        Hãy phân tích và xuất ra JSON các thông tin có thể lấy được như: họ tên, email, số điện thoại, học vấn, kinh nghiệm, kỹ năng, chứng chỉ, vị trí ứng tuyển, ngành nghề.
-
-        Lưu ý:
-        - Nếu có nhiều kinh nghiệm, học vấn, kỹ năng thì hãy để dưới dạng mảng.
-        - JSON phải phù hợp cho mọi ngành nghề (IT, Marketing, Kế toán...).
-        - Nếu thiếu thông tin thì để trống hoặc null.
-        - Giữ nguyên tiếng Việt.
-        """;
-
-        var completionResult = await _openAI.ChatCompletion.CreateCompletion(new ChatCompletionCreateRequest
+            extractedText = ExtractTextFromPdf(tempFilePath);
+        }
+        else if (extension == ".jpg" || extension == ".jpeg" || extension == ".png")
         {
-            Model = "gpt-4",
-            Messages = new List<ChatMessage>
-            {
-                ChatMessage.FromSystem("Bạn là một hệ thống phân tích CV thông minh."),
-                ChatMessage.FromUser(prompt)
-            },
-            Temperature = (float?)0.3
-        });
-
-        if (completionResult.Successful)
-        {
-            return new ResponseModel
-            {
-                Code = 200,
-                Message = "Phân tích CV thành công",
-                Data = completionResult.Choices.First().Message.Content
-            };
+            extractedText = await ExtractTextFromImage(tempFilePath);
         }
         else
         {
             return new ResponseModel
             {
-                Code = 500,
-                Message = completionResult.Error?.Message ?? "GPT không phản hồi"
+                Code = StatusCodes.Status400BadRequest,
+                Message = "Unsupported file type."
             };
         }
+
+        string prompt = GeneratePrompt(extractedText);
+
+        var completionResult = await _openAI.ChatCompletion.CreateCompletion(new ChatCompletionCreateRequest
+        {
+            Model = Models.Gpt_4,
+            Messages = new List<ChatMessage>
+           {
+               ChatMessage.FromSystem("You are an intelligent assistant that extracts structured information from CVs."),
+               ChatMessage.FromUser(prompt)
+           },
+            Temperature = 0.3f
+        });
+
+        if (completionResult.Successful)
+        {
+            var content = completionResult.Choices.First().Message.Content;
+
+            try
+            {
+                var cleanedContent = StripMarkdownJson(content);
+
+                var parsedList = JsonConvert.DeserializeObject<List<ParsedFieldModel>>(cleanedContent, new JsonSerializerSettings
+                {
+                    MissingMemberHandling = MissingMemberHandling.Ignore,
+                    NullValueHandling = NullValueHandling.Ignore
+                });
+
+                return new ResponseModel
+                {
+                    Code = StatusCodes.Status200OK,
+                    Message = "CV successfully parsed",
+                    Data = parsedList
+                };
+            }
+            catch (JsonReaderException ex)
+            {
+                return new ResponseModel
+                {
+                    Code = StatusCodes.Status500InternalServerError,
+                    Message = $"Failed to parse JSON from GPT: {ex.Message}",
+                    Data = content
+                };
+            }
+        }
+
+
+        return new ResponseModel
+        {
+            Code = StatusCodes.Status500InternalServerError,
+            Message = $"Error calling GPT: {completionResult.Error?.Message}",
+            Data = null
+        };
     }
+
+    private string GeneratePrompt(string cvContent)
+    {
+        return $"""
+Analyze the entire content of the following CV and extract **all possible structured information** using a flexible JSON format.
+
+For every detected piece of information, return an object with:
+- "type" (e.g., "contact", "education", "experience", "skill", "certificate", "language", "project", "personal_info", etc.)
+- "key" (e.g., "full_name", "email", "school", "company", "position", "degree", "dob", "gender", "objective", etc.)
+- "value" (exact raw value as found in the CV)
+- "group_index" (0 for single fields, and 1, 2, ... for grouped items like jobs or education)
+
+Rules:
+- Extract **everything you can find** in the CV (including contact info, personal info, languages, interests, references, achievements, activities, publications, etc.)
+- **Do not fabricate, guess, or infer** any data. Only return values that are **explicitly stated** in the CV.
+- If a section contains multiple entries (like work experience), use group_index = 1, 2,... accordingly.
+- **Return ONLY a pure JSON array of objects**, no explanation or commentary.
+
+CV Content:
+{cvContent.Trim()}
+""";
+    }
+
+
 
     private string ExtractTextFromPdf(string path)
     {
         var text = new StringBuilder();
-        using var document = UglyToad.PdfPig.PdfDocument.Open(path);
+        using var document = PdfDocument.Open(path);
         foreach (var page in document.GetPages())
         {
             text.AppendLine(page.Text);
@@ -99,11 +156,49 @@ public class CVParseService : ICVParseService
         return text.ToString();
     }
 
-    private string ExtractTextFromImage(string path)
+    private async Task<string> ExtractTextFromImage(string imagePath)
     {
-        using var engine = new Tesseract.TesseractEngine(@"./tessdata", "vie+eng", Tesseract.EngineMode.Default);
-        using var img = Tesseract.Pix.LoadFromFile(path);
-        using var page = engine.Process(img);
-        return page.GetText();
+        try
+        {
+            return await Task.Run(() =>
+            {
+                using var engine = new TesseractEngine(@"./tessdata", "eng", EngineMode.Default);
+                using var img = Pix.LoadFromFile(imagePath);
+                using var page = engine.Process(img);
+                return page.GetText();
+            });
+        }
+        catch (Exception ex)
+        {
+            throw new Exception($"Failed to extract text from image using Tesseract: {ex.Message}");
+        }
+    }
+    private string StripMarkdownJson(string content)
+    {
+        if (string.IsNullOrWhiteSpace(content)) return content;
+
+        // Case 1: GPT trả về trong ```json ... ```
+        if (content.StartsWith("```json"))
+        {
+            int start = content.IndexOf("```json") + 7;
+            int end = content.LastIndexOf("```");
+            if (end > start)
+            {
+                return content.Substring(start, end - start).Trim();
+            }
+        }
+
+        // Case 2: GPT trả về trong ``` ```
+        if (content.StartsWith("```"))
+        {
+            int start = content.IndexOf("```") + 3;
+            int end = content.LastIndexOf("```");
+            if (end > start)
+            {
+                return content.Substring(start, end - start).Trim();
+            }
+        }
+
+        return content.Trim(); // fallback nếu không có markdown
     }
 }

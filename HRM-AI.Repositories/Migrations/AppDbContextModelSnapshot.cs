@@ -228,9 +228,6 @@ namespace HRM_AI.Repositories.Migrations
                 {
                     b.HasBaseType("HRM_AI.Repositories.Entities.BaseEntity");
 
-                    b.Property<DateTime>("DateTime")
-                        .HasColumnType("datetime2");
-
                     b.Property<string>("Description")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -241,6 +238,9 @@ namespace HRM_AI.Repositories.Migrations
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("StartTime")
+                        .HasColumnType("datetime2");
 
                     b.HasIndex("CreatedById");
 
