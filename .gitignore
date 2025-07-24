@@ -10,3 +10,4 @@ obj/
 appsettings.Development.json
 secrets.json
 publish/
+appsettings.json
