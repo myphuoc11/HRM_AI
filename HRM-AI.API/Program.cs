@@ -14,7 +14,8 @@ builder.Services.AddControllers().AddJsonOptions(options =>
     // Ignore all fields with null value in response
     options.JsonSerializerOptions.DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull;
 
-}).AddNewtonsoftJson(); 
+}).AddNewtonsoftJson(options =>
+        options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore); 
 builder.Services.AddHttpClient<ResumeParserAIService>(client =>
 {
     client.BaseAddress = new Uri(builder.Configuration["ResumeParserAI:BaseUrl"]);

@@ -4,6 +4,8 @@ using System.Linq;
 using System.Net.Http.Json;
 using System.Text;
 using System.Threading.Tasks;
+using HRM_AI.Repositories.Common;
+using HRM_AI.Repositories.Enums;
 using HRM_AI.Repositories.Interfaces;
 using HRM_AI.Repositories.Models.ParsedFieldModels;
 using HRM_AI.Services.Interfaces;
@@ -26,12 +28,14 @@ namespace HRM_AI.Services.Services
         private readonly IConfiguration _configuration;
         private readonly IOpenAIService _openAI;
         private readonly IUnitOfWork _unitOfWork;
+        private readonly ISystemConfigService _systemConfigService;
 
-        public OpenAiService(IConfiguration configuration, IOpenAIService openAI, IUnitOfWork unitOfWork)
+        public OpenAiService(IConfiguration configuration, IOpenAIService openAI, IUnitOfWork unitOfWork, ISystemConfigService systemConfigService)
         {
             _configuration = configuration;
             _openAI = openAI;
             _unitOfWork = unitOfWork;
+            _systemConfigService = systemConfigService;
         }
 
         public async Task<float[]> GetEmbeddingAsync(List<string> texts)
@@ -87,9 +91,9 @@ namespace HRM_AI.Services.Services
             }
 
             var jdParts = new List<string>
-   {
-       campaignPosition.Description
-   };
+           {
+               campaignPosition.Description
+           };
 
             jdParts.AddRange(campaignPosition.CampaignPositionDetails
                 .Select(d => $"{d.Key}: {d.Value}"));
@@ -128,12 +132,13 @@ namespace HRM_AI.Services.Services
             {
                 Model = OpenAI.GPT3.ObjectModels.Models.Gpt_4,
                 Messages = new List<ChatMessage>
-       {
-           ChatMessage.FromSystem("You are an intelligent assistant that extracts structured information from CVs."),
-           ChatMessage.FromUser(prompt)
-       },
+               {
+                   ChatMessage.FromSystem("You are an intelligent assistant that extracts structured information from CVs and evaluates them."),
+                   ChatMessage.FromUser(prompt)
+               },
                 Temperature = 0.3f
             });
+            var cVRatingPoint = _unitOfWork.SystemConfigRepository.GetValueByKeyAsync(SystemConfigKey.CVRatingScale).Result;
 
             if (completionResult.Successful)
             {
@@ -151,17 +156,22 @@ namespace HRM_AI.Services.Services
 
                     var cvEmbeddingVector = await GetEmbeddingAsync(new List<string> { extractedText });
 
-                    // Compare vectors and calculate similarity score  
                     float similarityScore = CalculateCosineSimilarity(campaignEmbeddingVector, cvEmbeddingVector);
+
+                    int rating = (int)(similarityScore * float.Parse(cVRatingPoint));
+
+                    string evaluationComment = GenerateEvaluationComment(similarityScore, parsedList, jdText);
 
                     return new ResponseModel
                     {
                         Code = StatusCodes.Status200OK,
-                        Message = $"CV successfully parsed. Similarity Score: {similarityScore}",
+                        Message = $"CV successfully parsed. Rating: {rating}/{float.Parse(cVRatingPoint)}. Evaluation: {evaluationComment}",
                         Data = new
                         {
                             ParsedData = parsedList,
-                            SimilarityScore = similarityScore
+                            Rating = rating,
+                            SimilarityScore = similarityScore,
+                            EvaluationComment = evaluationComment
                         }
                     };
                 }
@@ -183,6 +193,51 @@ namespace HRM_AI.Services.Services
                 Data = null
             };
         }
+
+        private string GenerateEvaluationComment(float similarityScore, List<ParsedFieldModel> parsedData, string jdText)
+        {
+            var strengths = parsedData
+                .Where(p => p.Type == "skill" || p.Type == "experience")
+                .Select(p => p.Value)
+                .ToList();
+
+            var gaps = jdText
+                .Split('\n')
+                .Where(jd => !parsedData.Any(p => jd.Contains(p.Value, StringComparison.OrdinalIgnoreCase)))
+                .ToList();
+
+            var builder = new StringBuilder();
+
+            builder.Append($"Candidate's fit score is {similarityScore * 100:F2}/100. ");
+
+            if (strengths.Any())
+            {
+                builder.Append("They demonstrate key strengths such as: ");
+                builder.Append(string.Join(", ", strengths));
+                builder.Append(". ");
+            }
+
+            if (gaps.Any())
+            {
+                builder.Append("However, their CV lacks several requirements mentioned in the job description, including: ");
+                builder.Append(string.Join("; ", gaps));
+                builder.Append(". ");
+            }
+
+            if (similarityScore >= 0.7f && gaps.Count <= 2)
+            {
+                builder.Append("Overall, the candidate meets most key requirements and can be considered for the next interview round.");
+            }
+            else
+            {
+                builder.Append("Based on the provided information, the candidate does not fully meet the job requirements and is not recommended for progression at this time.");
+            }
+
+            return builder.ToString();
+        }
+
+
+
 
         private float CalculateCosineSimilarity(float[] vectorA, float[] vectorB)
         {
@@ -213,24 +268,24 @@ namespace HRM_AI.Services.Services
 
         private string GeneratePrompt(string cvContent)
         {
-            return $"""
-Analyze the entire content of the following CV and extract **all possible structured information** using a flexible JSON format.
-
-For every detected piece of information, return an object with:
-- "type" (e.g., "contact", "education", "experience", "skill", "certificate", "language", "project", "personal_info", etc.)
-- "key" (e.g., "full_name", "email", "school", "company", "position", "degree", "dob", "gender", "objective", etc.)
-- "value" (exact raw value as found in the CV)
-- "group_index" (0 for single fields, and 1, 2, ... for grouped items like jobs or education)
-
-Rules:
-- Extract **everything you can find** in the CV (including contact info, personal info, languages, interests, references, achievements, activities, publications, etc.)
-- **Do not fabricate, guess, or infer** any data. Only return values that are **explicitly stated** in the CV.
-- If a section contains multiple entries (like work experience), use group_index = 1, 2,... accordingly.
-- **Return ONLY a pure JSON array of objects**, no explanation or commentary.
-
-CV Content:
-{cvContent.Trim()}
-""";
+                        return $"""
+            Analyze the entire content of the following CV and extract **all possible structured information** using a flexible JSON format.
+            
+            For every detected piece of information, return an object with:
+            - "type" (e.g., "contact", "education", "experience", "skill", "certificate", "language", "project", "personal_info", etc.)
+            - "key" (e.g., "full_name", "email", "school", "company", "position", "degree", "dob", "gender", "objective", etc.)
+            - "value" (exact raw value as found in the CV)
+            - "group_index" (0 for single fields, and 1, 2, ... for grouped items like jobs or education)
+            
+            Rules:
+            - Extract **everything you can find** in the CV (including contact info, personal info, languages, interests, references, achievements, activities, publications, etc.)
+            - **Do not fabricate, guess, or infer** any data. Only return values that are **explicitly stated** in the CV.
+            - If a section contains multiple entries (like work experience), use group_index = 1, 2,... accordingly.
+            - **Return ONLY a pure JSON array of objects**, no explanation or commentary.
+            
+            CV Content:
+            {cvContent.Trim()}
+            """;
         }
 
 

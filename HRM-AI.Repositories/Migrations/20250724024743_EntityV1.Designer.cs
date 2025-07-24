@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace HRM_AI.Repositories.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20250722073514_EntityV2")]
-    partial class EntityV2
+    [Migration("20250724024743_EntityV1")]
+    partial class EntityV1
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -158,19 +158,8 @@ namespace HRM_AI.Repositories.Migrations
                 {
                     b.HasBaseType("HRM_AI.Repositories.Entities.BaseEntity");
 
-                    b.Property<Guid?>("CVApplicantId")
-                        .HasColumnType("uniqueidentifier");
-
                     b.Property<Guid>("CampaignPositionId")
                         .HasColumnType("uniqueidentifier");
-
-                    b.Property<string>("ContactName")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("ContactValue")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("FileAlt")
                         .IsRequired()
@@ -181,17 +170,13 @@ namespace HRM_AI.Repositories.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("FullName")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("Phone")
-                        .IsRequired()
+                    b.Property<string>("Point")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("Status")
                         .HasColumnType("int");
-
-                    b.HasIndex("CVApplicantId");
 
                     b.HasIndex("CampaignPositionId");
 
@@ -461,6 +446,29 @@ namespace HRM_AI.Repositories.Migrations
                     b.ToTable("Roles");
                 });
 
+            modelBuilder.Entity("HRM_AI.Repositories.Entities.SystemConfig", b =>
+                {
+                    b.HasBaseType("HRM_AI.Repositories.Entities.BaseEntity");
+
+                    b.Property<DateOnly?>("EffectiveFrom")
+                        .HasColumnType("date");
+
+                    b.Property<int>("EntityType")
+                        .HasColumnType("int");
+
+                    b.Property<string>("FieldName")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("IsActive")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("Value")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.ToTable("SystemConfigs");
+                });
+
             modelBuilder.Entity("HRM_AI.Repositories.Entities.Account", b =>
                 {
                     b.HasOne("HRM_AI.Repositories.Entities.Department", "Department")
@@ -492,11 +500,6 @@ namespace HRM_AI.Repositories.Migrations
 
             modelBuilder.Entity("HRM_AI.Repositories.Entities.CVApplicant", b =>
                 {
-                    b.HasOne("HRM_AI.Repositories.Entities.CVApplicant", null)
-                        .WithMany("CVApplicants")
-                        .HasForeignKey("CVApplicantId")
-                        .OnDelete(DeleteBehavior.Restrict);
-
                     b.HasOne("HRM_AI.Repositories.Entities.CampaignPosition", "CampaignPosition")
                         .WithMany("CVApplicants")
                         .HasForeignKey("CampaignPositionId")
@@ -516,7 +519,7 @@ namespace HRM_AI.Repositories.Migrations
             modelBuilder.Entity("HRM_AI.Repositories.Entities.CVApplicantDetails", b =>
                 {
                     b.HasOne("HRM_AI.Repositories.Entities.CVApplicant", "CVApplicant")
-                        .WithMany()
+                        .WithMany("CVApplicantDetails")
                         .HasForeignKey("CVApplicantId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
@@ -655,7 +658,7 @@ namespace HRM_AI.Repositories.Migrations
 
             modelBuilder.Entity("HRM_AI.Repositories.Entities.CVApplicant", b =>
                 {
-                    b.Navigation("CVApplicants");
+                    b.Navigation("CVApplicantDetails");
 
                     b.Navigation("InterviewSchedules");
                 });

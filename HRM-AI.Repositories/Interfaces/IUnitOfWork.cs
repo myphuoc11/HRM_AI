@@ -28,6 +28,7 @@ namespace HRM_AI.Repositories.Interfaces
         IInterviewScheduleRepository InterviewScheduleRepository { get; }
         IInterviewerRepository InterviewerRepository { get; }
         IInterviewOutcomeRepository InterviewOutcomeRepository { get; }
+        ISystemConfigRepository SystemConfigRepository { get; }
         #endregion
     }
 }
