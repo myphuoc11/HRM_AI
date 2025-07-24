@@ -11,3 +11,8 @@ appsettings.Development.json
 secrets.json
 publish/
 appsettings.json
+credentials/
+*.key
+*.pfx
+*.pem
+*.cer
