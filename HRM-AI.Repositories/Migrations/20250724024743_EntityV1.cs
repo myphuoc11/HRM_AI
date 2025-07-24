@@ -93,6 +93,29 @@ namespace HRM_AI.Repositories.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "SystemConfigs",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    CreationDate = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    CreatedById = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
+                    ModificationDate = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    ModifiedById = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
+                    DeletionDate = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    DeletedById = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
+                    IsDeleted = table.Column<bool>(type: "bit", nullable: false),
+                    EntityType = table.Column<int>(type: "int", nullable: false),
+                    FieldName = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    EffectiveFrom = table.Column<DateOnly>(type: "date", nullable: true),
+                    IsActive = table.Column<bool>(type: "bit", nullable: false),
+                    Value = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_SystemConfigs", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Accounts",
                 columns: table => new
                 {
@@ -178,7 +201,7 @@ namespace HRM_AI.Repositories.Migrations
                     DeletedById = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
                     IsDeleted = table.Column<bool>(type: "bit", nullable: false),
                     Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    DateTime = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    StartTime = table.Column<DateTime>(type: "datetime2", nullable: false),
                     EndTime = table.Column<DateTime>(type: "datetime2", nullable: false),
                     Description = table.Column<string>(type: "nvarchar(max)", nullable: false)
                 },
@@ -304,13 +327,10 @@ namespace HRM_AI.Repositories.Migrations
                     IsDeleted = table.Column<bool>(type: "bit", nullable: false),
                     FileUrl = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     FileAlt = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    FullName = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Phone = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    ContactName = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    ContactValue = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    FullName = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Point = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Status = table.Column<int>(type: "int", nullable: false),
-                    CampaignPositionId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    CVApplicantId = table.Column<Guid>(type: "uniqueidentifier", nullable: true)
+                    CampaignPositionId = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -319,12 +339,6 @@ namespace HRM_AI.Repositories.Migrations
                         name: "FK_CVApplicants_Accounts_CreatedById",
                         column: x => x.CreatedById,
                         principalTable: "Accounts",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
-                    table.ForeignKey(
-                        name: "FK_CVApplicants_CVApplicants_CVApplicantId",
-                        column: x => x.CVApplicantId,
-                        principalTable: "CVApplicants",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
@@ -536,11 +550,6 @@ namespace HRM_AI.Repositories.Migrations
                 column: "CreatedById");
 
             migrationBuilder.CreateIndex(
-                name: "IX_CVApplicants_CVApplicantId",
-                table: "CVApplicants",
-                column: "CVApplicantId");
-
-            migrationBuilder.CreateIndex(
                 name: "IX_Interviewers_InterviewerAccountId",
                 table: "Interviewers",
                 column: "InterviewerAccountId");
@@ -609,6 +618,9 @@ namespace HRM_AI.Repositories.Migrations
 
             migrationBuilder.DropTable(
                 name: "RequestOnboards");
+
+            migrationBuilder.DropTable(
+                name: "SystemConfigs");
 
             migrationBuilder.DropTable(
                 name: "Roles");

@@ -172,7 +172,7 @@ namespace HRM_AI.API
             // Account
             services.AddScoped<IAccountService, AccountService>();
             services.AddHttpClient<ResumeParserAIService>();
-            services.AddSingleton<GoogleDriveService>();
+            services.AddSingleton<IGoogleDriveService, GoogleDriveService>();
 
             services.AddScoped<IAccountRepository, AccountRepository>();
 
@@ -196,17 +196,25 @@ namespace HRM_AI.API
             services.AddScoped<IInterviewOutcomeRepository, InterviewOutcomeRepository>();
             // CVApplicant
             services.AddScoped<ICVApplicantRepository, CVApplicantRepository>();
+            services.AddScoped<ICVApplicantService, CVApplicantService>();
             // CVApplicantDetails
             services.AddScoped<ICVApplicantDetailsRepository, CVApplicantDetailsRepository>();
             // CampaignPosition
             services.AddScoped<ICampaignPositionRepository, CampaignPositionRepository>();
+            services.AddScoped<ICampaignPositionService, CampaignPositionService>();
             // Campaign
             services.AddScoped<ICampaignRepository, CampaignRepository>();
             services.AddScoped<ICampaignService, CampaignService>();
             // Department
             services.AddScoped<IDepartmentRepository, DepartmentRepository>();
+            services.AddScoped<IDepartmentService, DepartmentService>();
             // CampaignPositionDetail
             services.AddScoped<ICampaignPositionDetailRepository, CampaignPositionDetailRepository>();
+            // OpenAi
+            services.AddScoped<IOpenAiService, OpenAiService>();
+            // SystemConfig
+            services.AddScoped<ISystemConfigRepository, SystemConfigRepository>();
+            services.AddScoped<ISystemConfigService, SystemConfigService>();
 
 
             #endregion

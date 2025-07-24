@@ -9,7 +9,6 @@ namespace HRM_AI.Services.Models.CVApplicantDetails
 {
     public class CVApplicantDetailsAddModel
     {
-        public Guid CVApplicantId { get; set; }
         public string Type { get; set; }
         public string Key { get; set; } = null!;
         public string Value { get; set; } = null!;

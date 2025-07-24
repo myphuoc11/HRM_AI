@@ -8,5 +8,6 @@ namespace HRM_AI.Repositories.Interfaces
 {
     public interface IDepartmentRepository : IGenericRepository<Entities.Department>
     {
+        Task<Entities.Department?> FindByCodeAsync(string code);
     }
 }

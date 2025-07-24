@@ -1,6 +1,7 @@
 ﻿using Google;
 using HRM_AI.Services.Interfaces;
 using HRM_AI.Services.Models;
+using HRM_AI.Services.Models.CampaignModels;
 using HRM_AI.Services.Services;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -12,14 +13,16 @@ namespace HRM_AI.API.Controllers
     public class CvController : ControllerBase
     {
         private readonly ResumeParserAIService _parser;
-        private readonly GoogleDriveService _gds;
+        private readonly IGoogleDriveService _googleDriveService;
         private readonly ICVParseService _cVParserService;
+        private readonly IOpenAiService _openAiService;
 
-        public CvController(ResumeParserAIService parser, GoogleDriveService gds, ICVParseService cVParserService)
+        public CvController(ResumeParserAIService parser, IGoogleDriveService googleDriveService, ICVParseService cVParserService, IOpenAiService openAiService)
         {
             _parser = parser;
-            _gds = gds;
+            _googleDriveService = googleDriveService;
             _cVParserService = cVParserService;
+            _openAiService = openAiService;
         }
 
         [HttpPost("upload")]
@@ -64,57 +67,51 @@ namespace HRM_AI.API.Controllers
                 });
             }
         }
-        [HttpPost("uploads")]
-        public async Task<IActionResult> Uploads(IFormFile file)
-        {
-            var res = new ResponseModel();
+        //[HttpPost("uploads")]
+        //public async Task<IActionResult> UploadFile(IFormFile file)
+        //{
+        //    try
+        //    {
+        //        var model = new ResponseModel();
+        //        if (file != null)
+        //        {
+        //            using var stream = file.OpenReadStream();
+        //            var fileId = await _googleDriveService.UploadFileAsync(stream, file.FileName, file.ContentType);
 
-            if (file == null || file.Length == 0)
-            {
-                res.Code = StatusCodes.Status400BadRequest;
-                res.Message = "Missing or empty file";
-                res.Data = null;
-                return StatusCode(res.Code, res);
-            }
+        //            model = new ResponseModel
+        //            {
+        //                Code = StatusCodes.Status200OK,
+        //                Message = "File parsed successfully",
+        //                Data = fileId
+        //            };
 
-            try
-            {
-                string link = await _gds.UploadFileAsync(
-                    file.OpenReadStream(),
-                    file.FileName,
-                    file.ContentType);
+        //            return StatusCode(model.Code, model);
+        //        }
 
-                res.Code = StatusCodes.Status200OK;
-                res.Message = "File uploaded successfully";
-                res.Data = new { link };
-                return StatusCode(res.Code, res);
-            }
-            catch (GoogleApiException gex)
-            {
-                res.Code = StatusCodes.Status502BadGateway;
-                res.Message = "Error connecting to Google Drive";
-                res.Data = new { error = gex.Message };
-                return StatusCode(res.Code, res);
-            }
-            catch (Exception ex)
-            {
-                res.Code = StatusCodes.Status500InternalServerError;
-                res.Message = "Internal server error";
-                res.Data = new { error = ex.Message };
-                return StatusCode(res.Code, res);
-            }
-        }
-      
+        //        model = new ResponseModel
+        //        {
+        //            Code = StatusCodes.Status400BadRequest,
+        //            Message = "File parsed fail",
+        //        };
 
-            [HttpPost("parse")]
-            public async Task<IActionResult> ParseCV(IFormFile file)
+        //        return StatusCode(model.Code, model);
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        throw new Exception(ex.Message);
+        //    }
+        //}
+
+
+        [HttpPost("parse")]
+            public async Task<IActionResult> ParseCV(IFormFile file, Guid campaignPositionId)
             {
                 try
                 {
                     if (file == null || file.Length == 0)
                         return BadRequest(new ResponseModel { Code = 400, Message = "File không hợp lệ." });
 
-                    var result = await _cVParserService.ParseCVAsync(file);
+                    var result = await _openAiService.ParseCVAsync(file, campaignPositionId);
                     return StatusCode(result.Code, result);
                 }
                 catch (Exception ex)

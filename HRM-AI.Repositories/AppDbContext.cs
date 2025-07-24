@@ -60,6 +60,7 @@ namespace HRM_AI.Repositories
                 entity.Property(role => role.Description).HasMaxLength(256);
                 entity.HasIndex(role => role.Name).IsUnique();
             });
+            modelBuilder.Entity<SystemConfig>(entity => { entity.Property(e => e.Value).HasColumnType("nvarchar(max)"); });
 
             #endregion
 
@@ -83,6 +84,8 @@ namespace HRM_AI.Repositories
         //public DbSet<JobCV> JobCVs { get; set; }
         public DbSet<Email> Emails { get; set; }
         public DbSet<Entities.Role> Roles { get; set; }
+        public DbSet<SystemConfig> SystemConfigs { get; set; }
+
 
 
         #endregion

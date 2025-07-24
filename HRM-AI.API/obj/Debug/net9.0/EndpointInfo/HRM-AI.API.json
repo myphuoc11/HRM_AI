@@ -454,27 +454,31 @@
         }
       }
     },
-    "/api/cv/upload": {
+    "/api/campaign-positions": {
       "post": {
         "tags": [
-          "Cv"
+          "CampaignPosition"
         ],
         "requestBody": {
           "content": {
-            "multipart/form-data": {
+            "application/json-patch+json": {
               "schema": {
-                "type": "object",
-                "properties": {
-                  "file": {
-                    "type": "string",
-                    "format": "binary"
-                  }
-                }
-              },
-              "encoding": {
-                "file": {
-                  "style": "form"
-                }
+                "$ref": "#/components/schemas/CampaignPositionAddModel"
+              }
+            },
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CampaignPositionAddModel"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CampaignPositionAddModel"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/CampaignPositionAddModel"
               }
             }
           }
@@ -486,7 +490,75 @@
         }
       }
     },
-    "/api/cv/uploads": {
+    "/api/campaign-positions/{id}": {
+      "put": {
+        "tags": [
+          "CampaignPosition"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json-patch+json": {
+              "schema": {
+                "$ref": "#/components/schemas/CampaignPositionUpdateModel"
+              }
+            },
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CampaignPositionUpdateModel"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CampaignPositionUpdateModel"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/CampaignPositionUpdateModel"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "CampaignPosition"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/cv/upload": {
       "post": {
         "tags": [
           "Cv"
@@ -523,6 +595,16 @@
         "tags": [
           "Cv"
         ],
+        "parameters": [
+          {
+            "name": "campaignPositionId",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
         "requestBody": {
           "content": {
             "multipart/form-data": {
@@ -539,6 +621,113 @@
                 "file": {
                   "style": "form"
                 }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/cvApplicants": {
+      "post": {
+        "tags": [
+          "CVApplicant"
+        ],
+        "requestBody": {
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "required": [
+                  "CampaignPositionId",
+                  "FileAlt",
+                  "FileUrl"
+                ],
+                "type": "object",
+                "properties": {
+                  "FileUrl": {
+                    "type": "string",
+                    "format": "binary"
+                  },
+                  "FileAlt": {
+                    "type": "string"
+                  },
+                  "FullName": {
+                    "type": "string"
+                  },
+                  "Point": {
+                    "type": "string"
+                  },
+                  "CampaignPositionId": {
+                    "type": "string",
+                    "format": "uuid"
+                  },
+                  "CVApplicantDetailsAddModels": {
+                    "type": "array",
+                    "items": {
+                      "$ref": "#/components/schemas/CVApplicantDetailsAddModel"
+                    }
+                  }
+                }
+              },
+              "encoding": {
+                "FileUrl": {
+                  "style": "form"
+                },
+                "FileAlt": {
+                  "style": "form"
+                },
+                "FullName": {
+                  "style": "form"
+                },
+                "Point": {
+                  "style": "form"
+                },
+                "CampaignPositionId": {
+                  "style": "form"
+                },
+                "CVApplicantDetailsAddModels": {
+                  "style": "form"
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/departments": {
+      "post": {
+        "tags": [
+          "Department"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json-patch+json": {
+              "schema": {
+                "$ref": "#/components/schemas/DepartmentAddModel"
+              }
+            },
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/DepartmentAddModel"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/DepartmentAddModel"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/DepartmentAddModel"
               }
             }
           }
@@ -731,6 +920,28 @@
         },
         "additionalProperties": false
       },
+      "CVApplicantDetailsAddModel": {
+        "type": "object",
+        "properties": {
+          "type": {
+            "type": "string",
+            "nullable": true
+          },
+          "key": {
+            "type": "string",
+            "nullable": true
+          },
+          "value": {
+            "type": "string",
+            "nullable": true
+          },
+          "groupIndex": {
+            "type": "integer",
+            "format": "int32"
+          }
+        },
+        "additionalProperties": false
+      },
       "CampaignAddModel": {
         "required": [
           "endTime",
@@ -758,6 +969,88 @@
         },
         "additionalProperties": false
       },
+      "CampaignPositionAddModel": {
+        "type": "object",
+        "properties": {
+          "departmentId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "campaignId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "totalSlot": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "description": {
+            "type": "string",
+            "nullable": true
+          },
+          "campaignPositionDetailAddModels": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/CampaignPositionDetailAddModel"
+            },
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "CampaignPositionDetailAddModel": {
+        "type": "object",
+        "properties": {
+          "type": {
+            "type": "string",
+            "nullable": true
+          },
+          "key": {
+            "type": "string",
+            "nullable": true
+          },
+          "value": {
+            "type": "string",
+            "nullable": true
+          },
+          "groupIndex": {
+            "type": "integer",
+            "format": "int32"
+          }
+        },
+        "additionalProperties": false
+      },
+      "CampaignPositionUpdateModel": {
+        "type": "object",
+        "properties": {
+          "departmentId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "campaignId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "totalSlot": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "description": {
+            "type": "string",
+            "nullable": true
+          },
+          "campaignPositionDetailAddModels": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/CampaignPositionDetailAddModel"
+            },
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
       "CampaignUpdateModel": {
         "type": "object",
         "properties": {
@@ -776,6 +1069,20 @@
           "endTime": {
             "type": "string",
             "format": "date-time"
+          }
+        },
+        "additionalProperties": false
+      },
+      "DepartmentAddModel": {
+        "type": "object",
+        "properties": {
+          "departmentName": {
+            "type": "string",
+            "nullable": true
+          },
+          "description": {
+            "type": "string",
+            "nullable": true
           }
         },
         "additionalProperties": false

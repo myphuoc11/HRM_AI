@@ -1,5 +1,58 @@
 [
   {
+    "ContainingType": "HRM_AI.API.Controllers.CampaignPositionController",
+    "Method": "CreateCampaignPosition",
+    "RelativePath": "api/campaign-positions",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "campaignPositionAddModel",
+        "Type": "HRM_AI.Services.Models.CampaignPositionModels.CampaignPositionAddModel",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "HRM_AI.API.Controllers.CampaignPositionController",
+    "Method": "UpdateCampaignPosition",
+    "RelativePath": "api/campaign-positions/{id}",
+    "HttpMethod": "PUT",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "id",
+        "Type": "System.Guid",
+        "IsRequired": true
+      },
+      {
+        "Name": "campaignPositionUpdateModel",
+        "Type": "HRM_AI.Services.Models.CampaignPositionModels.CampaignPositionUpdateModel",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "HRM_AI.API.Controllers.CampaignPositionController",
+    "Method": "DeleteCampaignPosition",
+    "RelativePath": "api/campaign-positions/{id}",
+    "HttpMethod": "DELETE",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "id",
+        "Type": "System.Guid",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
     "ContainingType": "HRM_AI.API.Controllers.CampaignController",
     "Method": "GetAllCampaigns",
     "RelativePath": "api/campaigns",
@@ -136,6 +189,11 @@
         "Name": "file",
         "Type": "Microsoft.AspNetCore.Http.IFormFile",
         "IsRequired": false
+      },
+      {
+        "Name": "campaignPositionId",
+        "Type": "System.Guid",
+        "IsRequired": false
       }
     ],
     "ReturnTypes": []
@@ -157,17 +215,58 @@
     "ReturnTypes": []
   },
   {
-    "ContainingType": "HRM_AI.API.Controllers.CvController",
-    "Method": "Uploads",
-    "RelativePath": "api/cv/uploads",
+    "ContainingType": "HRM_AI.API.Controllers.CVApplicantController",
+    "Method": "CreateCVApplicant",
+    "RelativePath": "api/cvApplicants",
     "HttpMethod": "POST",
     "IsController": true,
     "Order": 0,
     "Parameters": [
       {
-        "Name": "file",
+        "Name": "FileUrl",
         "Type": "Microsoft.AspNetCore.Http.IFormFile",
         "IsRequired": false
+      },
+      {
+        "Name": "FileAlt",
+        "Type": "System.String",
+        "IsRequired": false
+      },
+      {
+        "Name": "FullName",
+        "Type": "System.String",
+        "IsRequired": false
+      },
+      {
+        "Name": "Point",
+        "Type": "System.String",
+        "IsRequired": false
+      },
+      {
+        "Name": "CampaignPositionId",
+        "Type": "System.Guid",
+        "IsRequired": false
+      },
+      {
+        "Name": "CVApplicantDetailsAddModels",
+        "Type": "System.Collections.Generic.List\u00601[[HRM_AI.Services.Models.CVApplicantDetails.CVApplicantDetailsAddModel, HRM-AI.Services, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]",
+        "IsRequired": false
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "HRM_AI.API.Controllers.DepartmentController",
+    "Method": "Add",
+    "RelativePath": "api/departments",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "departmentAddModel",
+        "Type": "HRM_AI.Services.Models.DepartmentModels.DepartmentAddModel",
+        "IsRequired": true
       }
     ],
     "ReturnTypes": []
