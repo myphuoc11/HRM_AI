@@ -15,8 +15,9 @@ namespace HRM_AI.Repositories.Entities
         public DateTime? EndTime { get; set; }
         public Account CreatedBy { get; set; } = null!;
         public InterviewScheduleStatus Status { get; set; } = InterviewScheduleStatus.Pending;
-        public int Round { get; set; }
-        public string InterviewType { get; set; } = null!;
+        public int? Round { get; set; }
+        public Guid InterviewTypeId { get; set; }
+        public InterviewTypeDictionary InterviewType { get; set; } = null!;
 
         // cân nhắc có nên để là một bảng DM hay không
         public string? Notes { get; set; }

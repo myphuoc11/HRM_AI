@@ -158,6 +158,9 @@ namespace HRM_AI.Repositories.Migrations
                     b.Property<Guid>("CampaignPositionId")
                         .HasColumnType("uniqueidentifier");
 
+                    b.Property<string>("Email")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("FileAlt")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -315,9 +318,6 @@ namespace HRM_AI.Repositories.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<Guid>("ReceiverId")
-                        .HasColumnType("uniqueidentifier");
-
                     b.Property<string>("Subject")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -355,14 +355,13 @@ namespace HRM_AI.Repositories.Migrations
                     b.Property<DateTime?>("EndTime")
                         .HasColumnType("datetime2");
 
-                    b.Property<string>("InterviewType")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<Guid>("InterviewTypeId")
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("Notes")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("Round")
+                    b.Property<int?>("Round")
                         .HasColumnType("int");
 
                     b.Property<DateTime>("StartTime")
@@ -375,7 +374,27 @@ namespace HRM_AI.Repositories.Migrations
 
                     b.HasIndex("CreatedById");
 
+                    b.HasIndex("InterviewTypeId");
+
                     b.ToTable("InterviewSchedules");
+                });
+
+            modelBuilder.Entity("HRM_AI.Repositories.Entities.InterviewTypeDictionary", b =>
+                {
+                    b.HasBaseType("HRM_AI.Repositories.Entities.BaseEntity");
+
+                    b.Property<string>("Code")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Description")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.ToTable("InterviewTypeDictionarys");
                 });
 
             modelBuilder.Entity("HRM_AI.Repositories.Entities.Interviewer", b =>
@@ -602,9 +621,17 @@ namespace HRM_AI.Repositories.Migrations
                         .HasForeignKey("CreatedById")
                         .OnDelete(DeleteBehavior.Restrict);
 
+                    b.HasOne("HRM_AI.Repositories.Entities.InterviewTypeDictionary", "InterviewType")
+                        .WithMany("InterviewSchedules")
+                        .HasForeignKey("InterviewTypeId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
                     b.Navigation("CVApplicant");
 
                     b.Navigation("CreatedBy");
+
+                    b.Navigation("InterviewType");
                 });
 
             modelBuilder.Entity("HRM_AI.Repositories.Entities.Interviewer", b =>
@@ -682,6 +709,11 @@ namespace HRM_AI.Repositories.Migrations
             modelBuilder.Entity("HRM_AI.Repositories.Entities.InterviewSchedule", b =>
                 {
                     b.Navigation("Interviewers");
+                });
+
+            modelBuilder.Entity("HRM_AI.Repositories.Entities.InterviewTypeDictionary", b =>
+                {
+                    b.Navigation("InterviewSchedules");
                 });
 
             modelBuilder.Entity("HRM_AI.Repositories.Entities.Role", b =>

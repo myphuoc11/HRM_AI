@@ -26,9 +26,9 @@ namespace HRM_AI.Repositories.Common
             IInterviewScheduleRepository interviewScheduleRepository,
             IInterviewerRepository interviewerRepository,
             IInterviewOutcomeRepository interviewOutcomeRepository,
-            ISystemConfigRepository systemConfigRepository
-
-
+            ISystemConfigRepository systemConfigRepository,
+            IInterviewTypeDictionaryRepository interviewTypeDictionaryRepository,
+            IEmailRepository emailRepository
             )
         {
             Context = context;
@@ -46,6 +46,8 @@ namespace HRM_AI.Repositories.Common
             InterviewerRepository = interviewerRepository;
             InterviewOutcomeRepository = interviewOutcomeRepository;
             SystemConfigRepository = systemConfigRepository;
+            InterviewTypeDictionaryRepository = interviewTypeDictionaryRepository;
+            EmailRepository = emailRepository;
         }
 
         public AppDbContext Context { get; }
@@ -53,7 +55,6 @@ namespace HRM_AI.Repositories.Common
         public IAccountRoleRepository AccountRoleRepository { get; }
         public IRoleRepository RoleRepository { get; }
         public IRefreshTokenRepository RefreshTokenRepository { get; }
-
         public ICampaignPositionDetailRepository CampaignPositionDetailRepository { get; }
 
         public ICampaignPositionRepository CampaignPositionRepository { get; }
@@ -73,6 +74,10 @@ namespace HRM_AI.Repositories.Common
         public IInterviewOutcomeRepository InterviewOutcomeRepository { get; }
 
         public ISystemConfigRepository SystemConfigRepository { get; }
+
+        public IInterviewTypeDictionaryRepository InterviewTypeDictionaryRepository { get; }
+
+        public IEmailRepository EmailRepository { get; }
 
         public async Task<int> SaveChangeAsync()
         {

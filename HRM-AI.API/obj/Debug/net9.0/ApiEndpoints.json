@@ -238,6 +238,11 @@
         "IsRequired": false
       },
       {
+        "Name": "Email",
+        "Type": "System.String",
+        "IsRequired": false
+      },
+      {
         "Name": "Point",
         "Type": "System.String",
         "IsRequired": false
@@ -266,6 +271,75 @@
       {
         "Name": "departmentAddModel",
         "Type": "HRM_AI.Services.Models.DepartmentModels.DepartmentAddModel",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "HRM_AI.API.Controllers.EmailController",
+    "Method": "Get",
+    "RelativePath": "api/emails",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "emailType",
+        "Type": "System.String",
+        "IsRequired": false
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "HRM_AI.API.Controllers.EmailController",
+    "Method": "Update",
+    "RelativePath": "api/emails/{id}",
+    "HttpMethod": "PUT",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "emailUpdateModel",
+        "Type": "HRM_AI.Services.Models.EmailModels.EmailUpdateModel",
+        "IsRequired": true
+      },
+      {
+        "Name": "id",
+        "Type": "System.Guid",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "HRM_AI.API.Controllers.InterviewOutcomeController",
+    "Method": "Add",
+    "RelativePath": "api/interview-outcomes",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "interviewOutcomeAddModel",
+        "Type": "HRM_AI.Services.Models.InterviewOutcomeAddModels.InterviewOutcomeAddModel",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "HRM_AI.API.Controllers.InterviewScheduleController",
+    "Method": "Add",
+    "RelativePath": "api/interview-schedules",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "interviewScheduleAddModel",
+        "Type": "HRM_AI.Services.Models.InterviewScheduleModels.InterviewScheduleAddModel",
         "IsRequired": true
       }
     ],
