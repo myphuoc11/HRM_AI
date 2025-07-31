@@ -7,10 +7,11 @@ using System.Threading.Tasks;
 namespace HRM_AI.Repositories.Enums
 {
     public enum EmailType 
-    { 
-        Notification, 
-        Reminder, 
-        Offer,
-        Other 
+    {
+        Welcome,
+        InterviewReminder,
+        OfferSent,
+        CVRejected,
+        InterviewResult
     }
 }

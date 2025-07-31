@@ -192,8 +192,11 @@ namespace HRM_AI.API
             services.AddScoped<IInterviewerRepository, InterviewerRepository>();
             // InterviewSchedule
             services.AddScoped<IInterviewScheduleRepository, InterviewScheduleRepository>();
+            services.AddScoped<IInterviewScheduleService, InterviewScheduleService>();
             // InterviewOutcome
             services.AddScoped<IInterviewOutcomeRepository, InterviewOutcomeRepository>();
+            services.AddScoped<IInterviewOutcomeService, InterviewOutcomeService>();
+
             // CVApplicant
             services.AddScoped<ICVApplicantRepository, CVApplicantRepository>();
             services.AddScoped<ICVApplicantService, CVApplicantService>();
@@ -215,8 +218,11 @@ namespace HRM_AI.API
             // SystemConfig
             services.AddScoped<ISystemConfigRepository, SystemConfigRepository>();
             services.AddScoped<ISystemConfigService, SystemConfigService>();
-
-
+            // InterviewTypeDictionary
+            services.AddScoped<IInterviewTypeDictionaryRepository, InterviewTypeDictionaryRepository>();
+            // Email
+            services.AddScoped<IEmailRepository, EmailRepository>();
+            services.AddScoped<IEmailService, EmailService>();
             #endregion
 
             return services;

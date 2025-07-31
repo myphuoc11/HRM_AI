@@ -62,6 +62,7 @@ namespace HRM_AI.Services.Services
                     FileUrl = fileDriveUrl,
                     FileAlt = cVApplicantAddModel.FileAlt,
                     Point = cVApplicantAddModel.Point + $"/{cVRatingPoint}",
+                    Email = cVApplicantAddModel.Email,
                     CVApplicantDetails = cVApplicantAddModel.CVApplicantDetailsAddModels
                         .Select(x => new CVApplicantDetails
                         {

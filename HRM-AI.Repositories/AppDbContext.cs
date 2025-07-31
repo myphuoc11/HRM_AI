@@ -85,7 +85,7 @@ namespace HRM_AI.Repositories
         public DbSet<Email> Emails { get; set; }
         public DbSet<Entities.Role> Roles { get; set; }
         public DbSet<SystemConfig> SystemConfigs { get; set; }
-
+        public DbSet<Entities.InterviewTypeDictionary> InterviewTypeDictionarys { get; set; }
 
 
         #endregion
